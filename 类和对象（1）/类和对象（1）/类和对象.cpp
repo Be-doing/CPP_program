@@ -12,7 +12,7 @@ void MyClass::My_Class(int _a)
 }
 int main()
 {
-	
+	MyClass test();
 	system("pause");
 	return 0;
 }

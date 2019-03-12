@@ -22,11 +22,11 @@ int sum(int _n1 , int _n2 )
 	return _n1 + _n2;
 }
 //函数重载
-	//extern "C"
-extern "C" int fun(int _n1, int _n2)
-{
-	return _n1 + _n2;
-}
+
+//extern "C" int fun(int _n1, int _n2)
+//{
+//	return _n1 + _n2;
+//}
 int fun2(int _n1, char _n2)
 {
 	return _n1 + _n2;
@@ -34,7 +34,7 @@ int fun2(int _n1, char _n2)
 //引用
 int& retu(int& _a)
 {
-	_a == 10;
+	_a = 10;
 	return _a;
 }
 
@@ -58,7 +58,8 @@ void my_for()
 
 int main()
 {
-
+	//fun(1, 3);
+	fun2(2,3);
 	system("pause");
 	return 0;
 }
