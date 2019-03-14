@@ -29,7 +29,9 @@ public:
 		_day = _mon[month - 1];
 		return _day;
 	}
+	Date operator+=(int days);
 	Date operator+(int days);
+	Date operator-=(int days);
 	Date operator-(int days);
 	int operator-(const Date& d);
 	Date& operator++();

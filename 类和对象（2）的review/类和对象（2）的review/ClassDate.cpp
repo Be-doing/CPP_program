@@ -11,18 +11,19 @@ Date::Date(int year = 1900, int month = 1, int day = 1)
 	{ 
 		if(month == 2 )
 		{
-		if (!(year % 4 == 0 && year % 100 != 0 || year % 400 == 0) && day > 28)
-		{
-			judge();
-		}
-		else if ((year % 4 == 0 && year % 100 != 0 || year % 400 == 0) && day > 29)
-		{
-			judge();
+			if (!(year % 4 == 0 && year % 100 != 0 || year % 400 == 0) && day > 28)
+			{
+				judge();
+			}
+			else if ((year % 4 == 0 && year % 100 != 0 || year % 400 == 0) && day > 29)
+			{
+				judge();
+			}
 		}
 		year_ = year;
 		month_ = month;
 		day_ = day;
-		}
+
 	}
 }
 //拷贝构造
@@ -41,12 +42,14 @@ Date& Date::operator=(const Date& d)
 	return *this;
 }
 //重载 加 + int
-Date Date::operator+(int days)
+Date Date::operator+=(int days)
 {
 	//Date temp;
-	this->day_ += days;
-	if (this->day_ >this->getday(this->year_,this->month_))
+	if (days < 0)
 	{
+		return *this - (-days);
+	}
+	this->day_ += days;
 		while (this->day_ > this->getday(this->year_, this->month_))
 		{
 			this->day_ -= this->getday(this->year_, this->month_);
@@ -60,42 +63,70 @@ Date Date::operator+(int days)
 				++this->month_;
 			}
 		}
-	}
 	return *this;
 }
-//重载  减 - int
-Date Date::operator-(int days)
+Date Date::operator+(int days)
 {
-	this->day_ -= days;
-	if (this->day_ < 0)
+	Date ret(*this);
+	ret += days;
+	return ret;
+}
+
+//重载  减 - int
+Date Date::operator-=(int days)
+{
+	if (days < 0)
 	{
-		while (this->day_ < this->getday(this->year_, this->month_ -1))
+		return *this + (-days);
+	}
+	this->day_ -= days;
+
+		while (this->day_ <= 0)
 		{
-			this->day_ += this->getday(this->year_, this->month_ -1 );
+			--this->month_;
+			if (this->month_ <= 0)
+			{
+				this->month_ = 12;
+			}
+			this->day_ += this->getday(this->year_, this->month_ );
 			if (this->month_ == 12)
 			{
 				--this->year_;
-				this->month_ = 12;
-			}
-			else
-			{
-				--this->month_;
+				//this->month_ = 12;
 			}
 		}
-	}
 	return *this;
+}
+Date Date::operator-(int days)
+{
+	Date ret(*this);
+	ret -= days;
+	return ret;
 }
 //重载 前自增
 Date& Date::operator++()
 {
-	 (*this) + 1;
+	 (*this) += 1;
 	return *this;
 }
 //重载 后自增
 Date Date::operator++(int)
 {
-	(*this)++;
+	Date ret(*this);
+	(*this) + 1;
+	return ret;
+}
+//重载 自减
+Date& Date::operator--()
+{
+	(*this) - 1;
 	return *this;
+}
+Date Date::operator--(int)
+{
+	Date ret(*this);
+	(*this) - 1;
+	return ret;
 }
 //重载 >
 bool Date::operator>(const Date& d)const
@@ -131,7 +162,7 @@ int Date::operator-(const Date& d)
 	int val = 0;
 	Date _min(*this);
 	Date _max(d);
-	int flag;
+	int flag = 1;
 	if (*this > d)
 	{
 		_min = d;
@@ -140,19 +171,8 @@ int Date::operator-(const Date& d)
 	}
 	while (_min != _max)
 	{
-		_min + 1;
+		++_min;
 		++val;
 	}
-	return val;
-}
-//重载 自减
-Date& Date::operator--()
-{
-	(*this)--;
-	return *this;
-}
-Date Date::operator--(int)
-{
-	(*this) - 1;
-	return *this;
+	return val*flag;
 }

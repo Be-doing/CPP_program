@@ -3,13 +3,19 @@
 using namespace std;
 int main()
 {
-	Date d1(2016,2,29);
+	Date d1(2018,5,5);
 	Date d2(2016,2,1);
-	d2++;
-	++d1;
-	//int temp = d1 - d2;
-	//cout << temp << endl;
+	//int num = d1 - d2;
+
+	//cout << num << endl;
+
+	d1+= 60;
+	//++d2;
 	d1.display();
+	//d2.display();
+	//bool res = d1 != d2;
+
+	//cout << res << endl;
 
 	system("pause");
 	return 0;
