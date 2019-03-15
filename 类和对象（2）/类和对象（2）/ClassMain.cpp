@@ -13,9 +13,9 @@ int main()
 	test.display();
 	test.display2();//但非const对象能调是const修饰的成员函数。
 	
-	const Date test3(2019,03,12);
-	test3.display();// const对象不能调非const成员函数，
-	test3.display2();
+	//const Date test3(2019,03,12);
+	//test3.display();// const对象不能调非const成员函数，
+	//test3.display2();
 	//String _str("hello c++!");;
 	//String _str2;
 	//_str2 = _str;

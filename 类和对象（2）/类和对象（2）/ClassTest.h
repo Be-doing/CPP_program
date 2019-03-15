@@ -12,7 +12,6 @@ public:
 		year_ = year;
 		month_ = month;
 		day_ = day;
-
 	}
 	//Date()//无参的构造函数
 	//{}
@@ -23,7 +22,6 @@ public:
 		year_ = date.year_;
 		month_ = date.month_;
 		day_ = date.day_;
-		
 	}
 	//运算符重载
 		//判断
@@ -55,32 +53,33 @@ private:
 	int year_;
 	int month_;
 	int day_;
-	//const修饰成员变量
-	//const int& ra;
-};
 
-class String 
-{
-public:
-	String(const char* str = "moren")
-	{
-		str_ = (char*)malloc(strlen(str) + 1);
-		strcpy(str_, str);
-	}
-	//String()
-	//{
-	//	
-	//}
-	//析构函数
-	~String()
-	{
-		cout << "正在清空资源" << endl;
-		free(str_);
-	}
-	void display()
-	{
-		cout << str_ << endl;
-	}
-private:
-	char* str_;
+	static int hour_;
 };
+int Date::hour_ = 12;
+
+//class String 
+//{
+//public:
+//	String(const char* str = "moren")
+//	{
+//		str_ = (char*)malloc(strlen(str) + 1);
+//		strcpy(str_, str);
+//	}
+//	//String()
+//	//{
+//	//	
+//	//}
+//	//析构函数
+//	~String()
+//	{
+//		cout << "正在清空资源" << endl;
+//		free(str_);
+//	}
+//	void display()
+//	{
+//		cout << str_ << endl;
+//	}
+//private:
+//	char* str_;
+//};
