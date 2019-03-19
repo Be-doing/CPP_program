@@ -68,8 +68,8 @@ private:
 
 int main()
 {
-	//Solution test;
-	//cout << test.Sum_Solution(4) << endl;
+	Solution test;
+	cout << test.Sum_Solution(4) << endl;
 	Date d(2018, 2, 20);
 	cout << d.num(2018, 2, 20) << endl;
 	system("pause");
