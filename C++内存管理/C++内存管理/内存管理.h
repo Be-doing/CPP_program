@@ -53,21 +53,32 @@ void Test()
 
 //创建一个类，该类只能在堆上创建
 	//1. 将类的构造函数私有，拷贝构造声明成私有。防止别人调用拷贝在栈上生成对象。
-	//2. 提供一个静态的成员函数，在该静态成员函数中完成堆对象的创建class HeapObj{
+	//2. 提供一个静态的成员函数，在该静态成员函数中完成堆对象的创建
+class HeapObj
+{
+public:
 	//定义成静态的，可用类名经行调用
 	static HeapObj getObj()
 	{
 		HeapObj* obj = new HeapObj;//在堆上进行申请内存
 		return *obj;
 	}
-private:	HeapObj();	HeapObj(const HeapObj& d);	int data_;};//创建一个类，该类只能在栈上创建
+private:
+	HeapObj();
+	HeapObj(const HeapObj& d);
+	int data_;
+};
+//创建一个类，该类只能在栈上创建
 	//1. 将类的构造函数私有。防止别人调用拷贝在堆上生成对象。
 	//2. 拷贝构造不用，因为拷贝构造是根据已经有的对象在栈生成对象
-	//2. 提供一个静态的成员函数，在该静态成员函数中完成栈对象的创建class StackObj{
+	//2. 提供一个静态的成员函数，在该静态成员函数中完成栈对象的创建
+class StackObj
+{
 	static StackObj getObj()
 	{
 		return StackObj();
 	}
+private:
 	StackObj()
 		:data_(0)
 	{
@@ -76,4 +87,24 @@ private:	HeapObj();	HeapObj(const HeapObj& d);	int data_;};//创建一个类，该
 	//删除 operator new(size_t size)是其不能在堆上创建
 	void* operator new(size_t size) = delete;
 	void operator delete(void* p) = delete;
-private:	int data_;};
+private:
+	int data_;
+};
+//单例模式
+//饿汉
+	//构造函数和拷贝构造函数私有
+	//定义一个静态单例成员，静态成员在程序运行程序之前完成初始化
+	//提供一个静态方法获取单例静态成员
+class Singleton
+{
+	static Singleton& getObj()
+	{
+		return data_;
+	}
+private:
+	static Singleton data_;
+	Singleton();
+	Singleton(const Singleton& s) = delete;
+	Singleton& operator=(Singleton const&);
+};
+Singleton Singleton::data_ ;
