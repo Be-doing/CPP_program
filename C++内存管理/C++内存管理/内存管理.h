@@ -50,7 +50,19 @@ void Test()
 	MemoryTest* t3= new MemoryTest[3];
 	delete [] t3;
 }
-
+//定位new表达式
+//在已分配的原始内存空间中调用构造函数初始化一个对象
+class NewPress
+{
+public:
+	NewPress()
+		:data_(0)
+	{
+		cout << "定位new表达式" << endl;
+	}
+private:
+	int data_;
+};
 //创建一个类，该类只能在堆上创建
 	//1. 将类的构造函数私有，拷贝构造声明成私有。防止别人调用拷贝在栈上生成对象。
 	//2. 提供一个静态的成员函数，在该静态成员函数中完成堆对象的创建
@@ -69,7 +81,7 @@ private:
 	int data_;
 };
 //创建一个类，该类只能在栈上创建
-	//1. 将类的构造函数私有。防止别人调用拷贝在堆上生成对象。
+	//1. 将类的构造函数私有。。
 	//2. 拷贝构造不用，因为拷贝构造是根据已经有的对象在栈生成对象
 	//2. 提供一个静态的成员函数，在该静态成员函数中完成栈对象的创建
 class StackObj
@@ -103,8 +115,9 @@ class Singleton
 	}
 private:
 	static Singleton data_;
-	Singleton();
-	Singleton(const Singleton& s) = delete;
-	Singleton& operator=(Singleton const&);
+	Singleton()
+	{};
+	Singleton(const Singleton &) = delete;
+	Singleton& operator=(Singleton const&) = delete;
 };
 Singleton Singleton::data_ ;
