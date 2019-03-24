@@ -111,13 +111,53 @@ class Singleton
 {
 	static Singleton& getObj()
 	{
-		return data_;
+		return obj_;
 	}
 private:
-	static Singleton data_;
+	static Singleton obj_;//不能直接定义一个成员，因为无法计算类的大小，非法操作
 	Singleton()
 	{};
 	Singleton(const Singleton &) = delete;
-	Singleton& operator=(Singleton const&) = delete;
+
 };
-Singleton Singleton::data_ ;
+Singleton Singleton::obj_ ;
+
+#include<mutex>
+class Singleton2
+{
+public:
+	static Singleton2* getObj()
+	{
+		if (obj2_ = nullptr)//两次检查，提高效率
+		{
+			mtx_.lock();//保证内存只创建一次
+			if (obj2_ == nullptr)
+			{
+				obj2_ = new Singleton2;
+			}
+			mtx_.unlock();
+		}
+		return obj2_;
+	}
+	class Gc//可有可无，程序结束，进程释放资源
+	{
+	public:
+		~Gc()//定义一个内部类的析构，是因为不能在本类中调用自身的析构，否则会发生递归调用
+		{
+			if (obj2_)
+			{
+				delete obj2_;
+				obj2_ = nullptr;
+			}
+		}
+	};
+private:
+	Singleton2()
+	{}
+	Singleton2(const Singleton&) = delete;
+	static Singleton2* obj2_;//指针只占四个字节，没有对象，当需要的时候才创建
+	static mutex mtx_;
+};
+
+Singleton2* Singleton2::obj2_ = nullptr;
+mutex Singleton2::mtx_;
