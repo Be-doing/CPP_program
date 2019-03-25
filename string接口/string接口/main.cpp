@@ -5,7 +5,8 @@ int main()
 {
 	//Iterator();
 	//Capacity();
-	Visit();
+	//Visit();
+	Change();
 	system("pause");
 	return 0;
 }

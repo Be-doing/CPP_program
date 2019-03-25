@@ -59,7 +59,6 @@ void Capacity()
 {
 	string s1("hello string!");
 
-
 	//size_t size() const 返回字符串有效字符长度
 	cout << "size_t size() const：" << s1.size() << endl;
 
@@ -86,23 +85,68 @@ void Capacity()
 	s1.resize(5);
 	cout << "void resize(size_t n == 5)：" << s1 << endl;
 
-	//	void reserve(size_t res_arg = 0) 为字符串预留空间	cout << "当前容量：" << s1.capacity() << endl;	s1.reserve(16);	cout << "void reserve(size_t res_arg = 0)：" << s1.capacity() << endl;
+	//	void reserve(size_t res_arg = 0) 为字符串预留空间
+	cout << "当前容量：" << s1.capacity() << endl;
+	s1.reserve(16);
+	cout << "void reserve(size_t res_arg = 16)：" << s1.capacity() << endl;
 
 }
 
-// string类对象的访问操作void Visit(){
-	string s1("hello string!");	const string s2("hello const string!");	//char& operator[] (size_t pos) 返回pos位置的字符，const string类对象调用
+// string类对象的访问操作
+void Visit()
+{
+	string s1("hello string!");
+	const string s2("hello const string!");
+	//char& operator[] (size_t pos) 返回pos位置的字符，const string类对象调用
 	for (size_t i = 0; i < s1.size(); ++i)
 	{
-		cout << s1[i] << "  " << endl;
+		cout << s1[i] << "  " ;
 	}
-	//	const char& operator[] (size_t pos)const返回pos位置的字符，非const string类对象调	用	for (size_t i = 0; i < s2.size(); ++i)
+	cout << endl;
+	//	const char& operator[] (size_t pos)const返回pos位置的字符，非const string类对象调	用
+	for (size_t i = 0; i < s2.size(); ++i)
 	{
-		cout << s2[i] << "  " << endl;
-	}	//用基于范围for循环	for (auto e : s1)
+		cout << s2[i] << "  ";
+	}
+	cout << endl;
+	//用基于范围for循环
+	for (auto e : s1)
 	{
-		cout << e << "  " << endl;
-	}	//迭代器的运用	string::iterator sit = s1.begin();	while (sit != s1.end())
+		cout << e << "  ";
+	}
+	cout << endl;
+	//迭代器的运用
+	string::iterator sit = s1.begin();
+	while (sit != s1.end())
 	{
-		cout << *sit << "  " << endl;
-	}}
+		cout << *sit << "  ";
+		++sit;
+	}
+	cout << endl;
+}
+void Change()
+{
+	string str("hello change!");
+//void push_back(char c) 在字符串后尾插字符c
+	str.push_back('!');
+	cout <<"在字符串后尾插字符'!'：" <<str << endl;
+//string& append(const char* s); 在字符串后追加一个字符串
+	string s2("hey");
+	str.append(s2);
+	cout << "在字符串后追加一个字符串：" << str << endl;
+//string& operator+=(const string	str)	在字符串后追加字符串str
+	str += s2;
+	cout << "在字符串后追加一个字符串(=+)：" << str << endl;
+//	string& operator+=(const char* s) 在字符串后追加C个数字符串
+	str +="string";
+	cout << "在字符串后追加C个数字符串：" << str << endl;
+//	string& operator+=(char c) 在字符串后追加字符c
+	str += 's';
+	cout << "在字符串后追加字符c：" << str << endl;
+//	const char* c_str()const 返回C格式字符串
+//	size_t find(char c, size_t pos = 0)const	从字符串pos位置开始往后找字符c，返回该字符在	字符串中的位置
+//	size_t rfind(char c, size_t pos = npos) 从字符串pos位置开始往前找字符c，返回该字符在	字符串中的位置
+//	string substr(size_t pos = 0, size_t n	= npos)const
+//	在str中从pos位置开始，截取n个字符，然后将其返回
+
+}
