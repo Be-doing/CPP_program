@@ -144,9 +144,15 @@ void Change()
 	str += 's';
 	cout << "在字符串后追加字符c：" << str << endl;
 //	const char* c_str()const 返回C格式字符串
+	const char* ch = str.c_str();
+	cout << "返回C格式字符串：" << ch << endl;
 //	size_t find(char c, size_t pos = 0)const	从字符串pos位置开始往后找字符c，返回该字符在	字符串中的位置
+	size_t pos = str.find('s', 0);
+	cout << "回该's'在str中的位置：" << pos << endl;
 //	size_t rfind(char c, size_t pos = npos) 从字符串pos位置开始往前找字符c，返回该字符在	字符串中的位置
-//	string substr(size_t pos = 0, size_t n	= npos)const
-//	在str中从pos位置开始，截取n个字符，然后将其返回
-
+	size_t pos2 = str.rfind('s', str.size());
+	cout << "回该's'在str中的位置：" << pos2 << endl;
+//	string substr(size_t pos = 0, size_t n	= npos)const 在str中从pos位置开始，截取n个字符，然后将其返回
+	string sub = str.substr(0, 5);
+	cout << "在str中从0位置开始，截取5个字符" << sub << endl;
 }
