@@ -26,6 +26,18 @@ public:
 			str_ = nullptr;
 		}
 	}
+	String& operator=(const String& s)
+	{
+		if (this != &s)
+		{
+			char* pStr = new char[strlen(s.str_) + 1];
+			strcpy(pStr, s.str_);
+			delete[] str_;
+			str_ = pStr;
+		}
+
+		return *this;
+	}
 
 private:
 	char* str_;
