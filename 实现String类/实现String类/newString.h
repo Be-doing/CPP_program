@@ -80,6 +80,18 @@ public:
 		str_[size_] = '\0';
 	}
 
+	//²åÈë×Ö·û´®
+	void Append(const char* str)
+	{
+		size_t leng = strlen(str);
+		if (size_ + leng >= capacity_)
+		{
+			Reserve(size_ + leng);
+		}
+		strcpy(str_ + leng, str);
+		size_ += leng;
+	}
+
 	//É¾³ý×Ö·û
 	void PopBack()
 	{
@@ -89,6 +101,31 @@ public:
 		}
 	}
 
+	//É¾³ýº¯Êý
+	void Erase(size_t pos, size_t len)
+	{
+		assert(pos < size_);
+		if (pos + len >= size_)
+		{
+			size_ = pos;
+			str_[pos] = '\0';//posºóÃæµÄ×Ö·û´®£¿
+		}
+		else
+		{
+			for (size_t i = pos + len; i <= size_; i++)
+			{
+				str_[pos++] = str_[i];
+			}
+			size_ = pos - 1;
+		}
+	}
+
+
+	void Clear()
+	{
+		size_ = 0;
+		str_[size_] = '\0';
+	}
 	//¸Ä±äsize
 		// n <= size_ £»  ÐÞ¸Äsize_ = n£¬ str[n] = '\n'
 		//	size_ < n <= capacity_£» size_ = n £» str[n] = '\n'    Ô­À´Î´ÓÃµÄ¿Õ¼ä°´ÓÃ×Ö·ûÌî²¹
@@ -106,37 +143,24 @@ public:
 		size_ = newsize;
 		str_[size_] = '\0';
 	}
-
-	//É¾³ýº¯Êý
-	void Erase(size_t pos, size_t len)
+	//×Ö·û´®³¤¶È
+	size_t Size() const
 	{
-		assert(pos < size_);
-		if (pos + len >=size_)
-		{
-			size_ = pos;
-			str_[pos] = '\0';
-		}
-		else
-		{
-			for (size_t i = pos + len; i <= size_; i++)
-			{
-				str_[pos++] = str_[i];
-			}
-			size_ = pos - 1;
-		}
+		return size_;
 	}
 
-	//²åÈë×Ö·û´®
-	void Append(const char* str)
+	//µü´úÆ÷
+	const_iterator begin() const
 	{
-		size_t leng = strlen(str);
-		if (size_ + leng >= capacity_)
-		{
-			Reserve(size_ + leng);
-		}
-		strcpy(str_ + leng, str);
-		size_ += leng;
+		return str_;
 	}
+	const_iterator end() const
+	{
+		return str_ + size_;
+	}
+
+
+
 	char& operator[](size_t pos)
 	{
 		assert(pos < size_);
@@ -147,18 +171,17 @@ public:
 		assert(pos < size_);
 		return str_[pos];
 	}
-	size_t Size() const
+	newString& operator+=(const char* str)
 	{
-		return size_;
+		size_t leng = strlen(str);
+		if (this->size_ + leng > capacity_)
+		{
+			Reserve(this->size_ + leng);
+		}
+		strcpy(this->str_+ size_, str);
+		return *this;
 	}
-	const_iterator begin() const
-	{
-		return str_;
-	}
-	const_iterator end() const
-	{
-		return str_ + size_;
-	}
+
 private:
 	char* str_;
 	size_t size_;
