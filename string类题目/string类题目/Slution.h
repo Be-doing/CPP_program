@@ -7,7 +7,7 @@ class MySolution
 {
 public:
 	//翻转字符串
-	void MyReverse(string str)
+	string MyReverse(string str)
 	{
 		int begin = 0;
 		int end = str.size();
@@ -18,19 +18,35 @@ public:
 			++begin;
 			--end;
 		}
-		cout << "翻转后字符串：" << str << endl;
+		return str;
+	}
+	//找到字符串第一个只出现一次的字符
+	char FirstLetter(string str)
+	{
+		for (size_t i = 0; i < str.size(); ++i)
+		{
+			for (size_t j = i + 1; j < str.size(); ++j)
+			{
+				if (str[i] == str[j])
+				{
+					break;
+				}
+				if (j == str.size() - 1)
+				{
+					return str[i];
+				}
+			}
+		}
+		return -1;
+	}
+	//字符串里面最后一个单词的长度
+	int LastLength(string str)
+	{
+		size_t pos = str.rfind(' ');
+		return str.size() - pos;
 	}
 	//判断回文
-	bool isNumLetter(char c)
-	{
-		if ((c >= '0' && c <= '9') ||
-			(c >= 'a' && c <= 'z') ||
-			(c >= 'A' && c <= 'Z'))
-		{
-			return true;
-		}
-		return false;
-	}
+
 	bool isPalindrome(string str)
 	{
 		if (str.empty())
@@ -48,8 +64,6 @@ public:
 		size_t end = str.size() - 1;
 		while (begin < end)
 		{
-
-
 			while (begin < end)
 			{
 				if (isNumLetter(str[begin]))
@@ -74,5 +88,15 @@ public:
 		return true;
 	}
 private:
+	bool isNumLetter(char c)
+	{
+		if ((c >= '0' && c <= '9') ||
+			(c >= 'a' && c <= 'z') ||
+			(c >= 'A' && c <= 'Z'))
+		{
+			return true;
+		}
+		return false;
+	}
 	string str_;
 };
