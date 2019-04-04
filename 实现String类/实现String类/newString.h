@@ -120,6 +120,16 @@ public:
 		}
 	}
 
+	// 返回c在newString中第一次出现的位置
+	size_t Find(char c, size_t pos = 0) const;
+	// 返回子串s在newString中第一次出现的位置
+	size_t Find(const char* s, size_t pos = 0) const;
+	// 截取newString从pos位置开始的n个字符
+	newString SubStr(size_t pos, size_t n);
+	// 在pos位置上插入字符c/字符串str，并返回该字符的位置
+	newString& Insert(size_t pos, char c);
+	newString& Insert(size_t pos, const char* str);
+
 
 	void Clear()
 	{
@@ -160,7 +170,7 @@ public:
 	}
 
 
-
+	//各类重载
 	char& operator[](size_t pos)
 	{
 		assert(pos < size_);
@@ -181,7 +191,32 @@ public:
 		strcpy(this->str_+ size_, str);
 		return *this;
 	}
-
+	bool operator<(const newString& str)
+	{
+		int len1 = strlen(str_);
+		int len2 = strlen(str.str_);
+		for (int i = 0; i < len1;++i)
+		{
+			if (str.str_[i] == '\0')
+			{
+				return 1;
+			}
+			if (str_[i] > str.str_[i])
+			{
+				return 1;
+			}
+			if (str_[i] < str.str_[i])
+			{
+				return 0;
+			}
+		}
+		return 0;
+	}
+	bool operator<=(const newString& str);
+	bool operator>(const newString& str);
+	bool operator>=(const newString& str);
+	bool operator==(const newString& str);
+	bool operator!=(const newString& str);
 private:
 	char* str_;
 	size_t size_;
