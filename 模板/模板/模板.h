@@ -53,3 +53,12 @@ void Print(MyVector<T3>& v)
 	}
 	cout << endl;
 }
+template<class T4>
+T4 Sum(const T4& left,const T4& right)
+{
+	return left + right;
+}
+int Sum(int left, int right)
+{
+	return left + right;
+}
