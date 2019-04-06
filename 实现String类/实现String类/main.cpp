@@ -11,9 +11,9 @@ int main()
 	s1.PushBack('f');
 	s1.PushBack('g');
 	s1.PushBack('h');
+	s1.Insert(3, "hello");
 
-	Print(s1);
-
+	size_t res = s1.Find("cde");
 	system("pause");
 	return 0;
 }

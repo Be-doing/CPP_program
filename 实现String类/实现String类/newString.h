@@ -65,6 +65,7 @@ public:
 			strcpy(tmp, str_);
 			delete[] str_;
 			str_ = tmp;
+			capacity_ = newcapacity;
 		}
 	}
 	//添加字符
@@ -86,13 +87,55 @@ public:
 		size_t leng = strlen(str);
 		if (size_ + leng >= capacity_)
 		{
-			Reserve(size_ + leng);
+			size_t newcapacity = (size_ + leng <= 15 ? 15 : size_ + leng);
+			Reserve(newcapacity);
 		}
 		strcpy(str_ + leng, str);
 		size_ += leng;
 	}
+	// 在pos位置上插入字符c/字符串str，并返回该字符的位置
+	newString& Insert(size_t pos, char c)
+	{
+		assert(pos <= size_);
+		if (size_ == capacity_)
+		{
+			size_t newcapacity = (size_ == 0 ? 15 : capacity_ * 2);
+			Reserve(newcapacity);
+		}
+		size_t end = size_;
+		while (pos < end)
+		{
+			str_[end] = str_[end - 1];
+			--end;
+		}
+		str_[pos] = c;
+		++size_;
+		return *this;
+	}
+	newString& Insert(size_t pos, const char* str)
+	{
+		assert(pos <= size_);
+		size_t len = strlen(str);
+		if (size_ + len >= capacity_)
+		{
+			size_t newcapacity = (size_ + len <= 15 ? 15 : size_ + len);
+			Reserve(newcapacity);
+		}
+		size_t end = size_ + len;
+		while (pos + len - 1 < end)
+		{
+			str_[end] = str_[end - len];
+			--end;
+		}
+		for (size_t i = 0; i < len; ++i)
+		{
+			str_[pos] = str[i];
+		}
+		size_ += len;
+		return *this;
+	}
 
-	//删除字符
+	//尾删
 	void PopBack()
 	{
 		if (size_ > 0)
@@ -108,7 +151,7 @@ public:
 		if (pos + len >= size_)
 		{
 			size_ = pos;
-			str_[pos] = '\0';//pos后面的字符串？
+			str_[pos] = '\0';//pos后面的字符串
 		}
 		else
 		{
@@ -121,15 +164,56 @@ public:
 	}
 
 	// 返回c在newString中第一次出现的位置
-	size_t Find(char c, size_t pos = 0) const;
+	size_t Find(char c, size_t pos = 0) const
+	{
+		while (pos < size_)
+		{
+			if (str_[pos] == c)
+			{
+				return pos;
+			}
+			++pos;
+		}
+		return npos;
+	}
 	// 返回子串s在newString中第一次出现的位置
-	size_t Find(const char* s, size_t pos = 0) const;
+	// 判断字串
+	char* SubStr( char* str)
+	{
+		char* dst = str_;
+		char* src = str;
+		while (*dst)
+		{
+			if (*dst == *src)
+			{
+				char* mathdst = dst + 1;
+				char* mathsrc = src + 1;
+
+				while (*mathdst && * mathsrc)
+				{
+					if (*mathdst != *mathsrc)
+					{
+						return 0;
+					}
+					++mathdst;
+					++mathsrc;
+				}
+				if (mathsrc == '\0')
+				{
+					return dst;
+				}
+			}
+
+			++dst;
+		}
+		return 0;
+	}
+	size_t Find(const char* str, size_t pos = 0) const
+	{
+		char* res = SubStr(str);
+	}
 	// 截取newString从pos位置开始的n个字符
 	newString SubStr(size_t pos, size_t n);
-	// 在pos位置上插入字符c/字符串str，并返回该字符的位置
-	newString& Insert(size_t pos, char c);
-	newString& Insert(size_t pos, const char* str);
-
 
 	void Clear()
 	{
@@ -183,45 +267,61 @@ public:
 	}
 	newString& operator+=(const char* str)
 	{
-		size_t leng = strlen(str);
-		if (this->size_ + leng > capacity_)
-		{
-			Reserve(this->size_ + leng);
-		}
-		strcpy(this->str_+ size_, str);
+
+		//size_t leng = strlen(str);
+		//if (this->size_ + leng > capacity_)
+		//{
+		//	Reserve(this->size_ + leng);
+		//}
+		//strcpy(this->str_+ size_, str);
+		Append(str);
 		return *this;
 	}
+	newString& operator+=(const newString& str)
+	{
+		Append(str.str_);
+		return *this;
+	}
+
 	bool operator<(const newString& str)
 	{
-		int len1 = strlen(str_);
-		int len2 = strlen(str.str_);
-		for (int i = 0; i < len1;++i)
+		if (strcmp(str_, str.str_) + 1)
 		{
-			if (str.str_[i] == '\0')
-			{
-				return 1;
-			}
-			if (str_[i] > str.str_[i])
-			{
-				return 1;
-			}
-			if (str_[i] < str.str_[i])
-			{
-				return 0;
-			}
+			return false;
 		}
-		return 0;
+		return true;
 	}
-	bool operator<=(const newString& str);
-	bool operator>(const newString& str);
-	bool operator>=(const newString& str);
-	bool operator==(const newString& str);
-	bool operator!=(const newString& str);
+	bool operator<=(const newString& str)
+	{
+		return !(str_ > str.str_);
+	}
+	bool operator>(const newString& str)
+	{
+		if (strcmp(str_,str.str_))
+		{
+			return true;
+		}
+		return false;
+	}
+	bool operator>=(const newString& str)
+	{
+		return !(str_ < str.str_);
+	}
+	bool operator==(const newString& str)
+	{
+		return !((str_ > str.str_) || (str_ < str.str_));
+	}
+	bool operator!=(const newString& str)
+	{
+		return !(str_ == str.str_);
+	}
 private:
 	char* str_;
 	size_t size_;
 	size_t capacity_;
+	static const size_t npos;
 };
+const size_t newString::npos = -1;
 void Print(newString& str)
 {
 	for (size_t i = 0; i < str.Size(); i++)
