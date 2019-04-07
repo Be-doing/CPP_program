@@ -87,6 +87,48 @@ public:
 		}
 		return true;
 	}
+	//字符串相加
+	//当前位的值 = （第一个数 + 第二个数 + 上一位的进位）% 10
+	//当前位的进位 = （第一个数 + 第二个数 + 上一位的仅为） / 10 ->进位只能是 1
+	string AddStrings(string str1, string str2)
+	{
+		int pos1 = str1.size() - 1;
+		int pos2 = str2.size() - 1;
+		int step = 0;
+		string ret = "";
+		while (pos1 >= 0 || pos2 >=0)
+		{
+			int sum = 0;
+			sum += step;
+			if (pos1 >= 0)
+			{
+				sum += (str1[pos1] - '0');
+			}
+			if (pos2 >= 0)
+			{
+				sum += (str2[pos2] - '0');
+			}
+			if (sum > 9)
+			{
+				sum -= 10;
+				step = 1;
+			}
+			else
+			{
+				step = 0;
+			}
+			ret.push_back( sum + '0');
+			pos1--;
+			pos2--;
+		}
+		if (step == 1)
+		{
+			ret.push_back( '1');
+		} 
+			reverse(ret.begin(),ret.end());
+			return ret;
+	}
+
 private:
 	bool isNumLetter(char c)
 	{
