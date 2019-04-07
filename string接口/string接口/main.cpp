@@ -3,10 +3,10 @@
 
 int main()
 {
-	//Iterator();
-	//Capacity();
-	//Visit();
-	Change();
+	Iterator();
+	////Capacity();
+	////Visit();
+	//Change();
 	system("pause");
 	return 0;
 }
