@@ -2,6 +2,7 @@
 #include<vector>
 #include<iostream>
 #include<bitset>
+#include<string>
 using namespace std;
 class Solution
 {
@@ -76,40 +77,63 @@ public:
 				res[1] ^= e;
 			}
 		}
+		return res;
 	}
 	//数组中有一个数字出现的次数超过数组长度的一半，请找出这个数字。
 	//	例如输入一个长度为9的数组{ 1,2,3,2,2,2,5,4,2 }。由于数字2在数组中出现了5次，
 	//	超过数组长度的一半，因此输出2。如果不存在则输出0。
+	void BubbleSort(vector<int> & num)
+	{
+		int length = num.size();
+		int flag = 1;
+		for (int i = 1; i < length; ++i)
+		{
+			for (int j = 0; j < length - i; ++j)
+			{
+				if (num[j] > num[j + 1])
+				{
+					swap(num[j], num[j + 1]);
+					flag = 0;
+				}
+				if (flag == 1)
+				{
+					break;
+				}
+			}
+		}
+	}
 	int FindNum(vector<int> & nums)
 	{
 		int len = nums.size();
-		int res[2] = { 0 };
-		int ret = 0;
-		int pos = 0;
-		for (auto& e : nums)
+		BubbleSort(nums);
+		vector<int> tmp;
+		int i = 0;
+		int j = 0;
+		for (i = 0; i < len; ++i)
 		{
-			ret ^= e;
-		}
-		for (size_t i = 0; i < 32; ++i)
-		{
-			if (((ret >> i) & 1) == 1)
+			if (nums[i] == nums[i + 1])
 			{
-				pos = i;
-				break;
-			}
-		}
-		for (auto& e : nums)
-		{
-			if (((e >> pos) & 1) == 1)
-			{
-				res[0] ^= e;
+				tmp[j] += 1;
 			}
 			else
 			{
-				res[1] ^= e;
+				++j;
 			}
-
-
+		}
+		int mid = len / 2;
+		for (int k = 0; k < j; ++k)
+		{
+			if (tmp[k] > mid)
+			{
+				int sum = 0;
+				for (int s = 0; s < k; ++s)
+				{
+					sum += tmp[s];
+				}
+				return nums[sum];
+			}
+		}
+		return 0;
 	}
 	//连续子数组的最大和 OJ
 };

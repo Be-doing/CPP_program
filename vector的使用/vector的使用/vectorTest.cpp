@@ -1,6 +1,6 @@
 #include<vector>
 #include<iostream>
-#include<string>
+
 using namespace std;
 #include"vectorµÄÊ¹ÓÃ.h"
 template <class T1>
