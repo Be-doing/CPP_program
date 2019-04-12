@@ -22,53 +22,51 @@ public:
 	}
 	int SingleNumber2(vector<int>& nums)//其他数都是成三个存在，有一个数只有一个
 	{
-		char  bitarr[32] = { 0 };
+		int  bitarr[32] = { 0 };//设置一个数组存储位数
 		for (const auto& e : nums)
 		{
-			for (size_t i = 0; i < 32; i++)
+			for (size_t i = 0; i < 32; ++i)
 			{
-				if ((e >> i) & 1 == 1)
+				if (((e >> i) & 1) == 1)
 				{
-					bitarr[i] += 1;
+					bitarr[i] += 1;//如果一个数的 i 位是 1 就进行加一操作，该位一定是三的倍数
 				}
 			}
 		}
 		for (size_t i = 0; i < 32; ++i)
-		{
-			if (bitarr[i] >=3)
-			{
-				bitarr[i] %= 3;
-			}
+		{	
+			bitarr[i] %= 3;//余三操作，剩下得就是单独出现的数的二进制位数
+			
 		}
 		int temp = 0;
-		for (size_t i = 31; i  >= 0; i--)
+		for (int i = 31; i  >= 0; i--)
 		{
-			temp |= ((bitarr[i] - '0') << i);
+			temp |= (bitarr[i]  << i);
 		}
 		return temp;
 	}
 	//给定一个整数数组 nums，其中恰好有两个元素只出现一次，其余所有元素均出现两次。
 	//	找出只出现一次的那两个元素
-	int* SingleNumber3(vector<int>& nums)
+	vector<int> SingleNumber3(vector<int>& nums)
 	{
-		int res[2] = { 0 };
+		vector<int> res(2);
 		int ret = 0;
 		int pos = 0;
 		for (auto& e : nums)
 		{
-			ret ^= e;	
+			ret ^= e;	//用一个数保存两个数单出来的异或对象
 		}
 		for (size_t i = 0; i < 32; ++i)
 		{
-			if (((ret >> i) & 1) == 1)
+			if (((ret >> i) & 1) == 1)//1110
 			{
-				pos = i;
+				pos = i;//随机找一个位数是 1 的位值
 				break;
 			}
 		}
 		for (auto& e : nums)
 		{
-			if (((e >> pos) & 1) == 1)
+			if (((e >> pos) & 1) == 1) //分开这两个数，一个为1 一个为 0
 			{
 				res[0] ^= e;
 			}
@@ -106,7 +104,7 @@ public:
 	{
 		int len = nums.size();
 		BubbleSort(nums);
-		vector<int> tmp;
+		vector<int> tmp(len,0);
 		int i = 0;
 		int j = 0;
 		for (i = 0; i < len; ++i)

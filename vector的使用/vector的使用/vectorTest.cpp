@@ -59,11 +59,21 @@ std::vector<string> letterCombinations(string digits) {
 int main()
 {
 	//CreateTest();
-	std::vector<string> s;
-	s = letterCombinations("234");
+	//std::vector<string> s;
+	//s = letterCombinations("234");
+	//Print(s);
+	Solution s;
+	vector<int> nums = { 1,3,5,9,4,6,3,4,1,5,9 };
+	vector<int> nums2 = { 1,3,5,9,4,6,3,4,1,5,9,1,3,5,9,4,6 };
+	vector<int> nums3 = { 1,3,5,9,4,1,3,5,9,4,6,8 };
+	int res = s.SingleNumber(nums);
+	int res2 = s.SingleNumber2(nums2);
 
-	Print(s);
-	
+	vector<int> res3;
+	res3 = s.SingleNumber3(nums3);
+	cout << res << endl;
+	cout << res << endl;
+	cout << res3[0] << "\t" << res3[1] << endl;
 	system("pause");
 	return 0;
 }
