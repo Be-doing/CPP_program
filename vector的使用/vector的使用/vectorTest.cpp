@@ -3,15 +3,6 @@
 
 using namespace std;
 #include"vector的使用.h"
-template <class T1>
-void Print(vector<T1>& v)
-{
-	for (auto& e : v)
-	{
-		cout << e << "\t";
-	}
-	cout << endl;
-}
 
 //构造函数的使用
 void CreateTest()
@@ -26,6 +17,16 @@ void CreateTest()
 	Print(v3);
 	Print(v4);
 }
+template <class T1>
+void Print(vector<T1>& v)
+{
+	for (auto& e : v)
+	{
+		cout << e << "\t";
+	}
+	cout << endl;
+}
+
 string letterMap[10] = { "", "", "abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz" };
 void combineStr(const string& digits, size_t index, const string& str, vector<string>& strs)
 {
@@ -58,22 +59,22 @@ std::vector<string> letterCombinations(string digits) {
 
 int main()
 {
-	//CreateTest();
+	CreateTest();
 	//std::vector<string> s;
 	//s = letterCombinations("234");
 	//Print(s);
-	Solution s;
-	vector<int> nums = { 1,3,5,9,4,6,3,4,1,5,9 };
-	vector<int> nums2 = { 1,3,5,9,4,6,3,4,1,5,9,1,3,5,9,4,6 };
-	vector<int> nums3 = { 1,3,5,9,4,1,3,5,9,4,6,8 };
-	int res = s.SingleNumber(nums);
-	int res2 = s.SingleNumber2(nums2);
+	//Solution s;
+	//vector<int> nums = { 1,3,5,9,4,6,3,4,1,5,9 };
+	//vector<int> nums2 = { 1,3,5,9,4,6,3,4,1,5,9,1,3,5,9,4,6 };
+	//vector<int> nums3 = { 1,3,5,9,4,1,3,5,9,4,6,8 };
+	//int res = s.SingleNumber(nums);
+	//int res2 = s.SingleNumber2(nums2);
 
-	vector<int> res3;
-	res3 = s.SingleNumber3(nums3);
-	cout << res << endl;
-	cout << res << endl;
-	cout << res3[0] << "\t" << res3[1] << endl;
+	//vector<int> res3;
+	//res3 = s.SingleNumber3(nums3);
+	//cout << res << endl;
+	//cout << res << endl;
+	//cout << res3[0] << "\t" << res3[1] << endl;
 	system("pause");
 	return 0;
 }
