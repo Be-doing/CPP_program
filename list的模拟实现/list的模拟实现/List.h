@@ -1,5 +1,6 @@
 #pragma once
-
+#include<iostream>
+using namespace std;
 //结点类
 template<class T>
 class ListNode
@@ -10,9 +11,9 @@ public:
 		prev_(nullptr),
 		next_(nullptr)
 	{}
-private:
+
 	ListNode* prev_;
-	ListNode* nxst_;
+	ListNode* next_;
 	T val_;
 };
 
@@ -27,7 +28,7 @@ public:
 	typedef ListIterator<T> Lit;
 	//迭代器的构造
 	ListIterator(PNode pnode = nullptr)
-		:pnode_(pnod)
+		:pnode_(pnode)
 	{}
 	//迭代器的拷贝构造
 	ListIterator(const Lit& lit)
@@ -57,12 +58,12 @@ public:
 	//++操作
 	Lit& operator++()
 	{
-		return pnode_ = pnode_->nxst_;
+		return pnode_ = pnode_->next_;
 	}
 	Lit operator++(int)
 	{
 		Lit tmp(*this);
-		pnode_ = pnode_->nxst_;
+		pnode_ = pnode_->next_;
 		return tmp;
 	}
 private:
@@ -78,21 +79,33 @@ class List
 public:
 	typedef ListNode<T> Node;
 	typedef ListNode<T>* PNode;
-	List(const T& val = T())
+	//构造函数---空的list
+	List()
 	{
+		Create();
+	}
+	//构造函数----n个val的list
+	List(size_t n, const T& val = T())
+	{
+		Create();
 
 	}
+	//构造函数
 	List(const List& list)
 	{
 		head_ = list.head_;
 	}
+	//通过迭代器的构造
+	List(iterator firdt, iterator end)
+	{
+
+	}
 private:
 	PNode head_;
-	void Create(const T& val = T())
+	void Create()
 	{
 		head_ = new Node;
-		head->prev = head_->nxst_ = head_;
-		head->val_ = val;
+		head_->prev_ = head_->next_ = head_;
 	}
 };
 
