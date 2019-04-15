@@ -32,7 +32,16 @@ public:
 	finish_(nullptr),
 	endofstorage_(nullptr)
 	{}
-
+	MyVector(const MyVector& v)
+	{
+		start_ = new v[Capacity()];
+		for (size_t i = 0; i < v.Size(); ++i)
+		{
+			start[i] = v[i];//Éî¿½±´
+		}
+		finish_ = start_ + v.Size();	
+		endofstorage_ = start_ + Capacity();
+	}
 	//ÈÝÁ¿
 	size_t Capacity()
 	{
