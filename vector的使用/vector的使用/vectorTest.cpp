@@ -3,28 +3,67 @@
 
 using namespace std;
 #include"vector的使用.h"
-
+template <class T1>
+void Print(vector<T1>& v)
+{
+	for (auto& e : v)
+	{
+		cout << e << "  ";
+	}
+	cout << endl;
+}
 //构造函数的使用
 void CreateTest()
 {
-	std::vector<int> v1;
-	std::vector<int> v2(10, 10);
-	std::vector<int> v3(v2);
-	std::vector<int> v4(v2.begin(), v2.end() - 5);
+	vector<int> v1;
+	vector<int> v2(10, 10);
+	vector<int> v3(v2);
+	vector<int> v4(v2.begin(), v2.end() - 5);
 
 	Print(v1);
 	Print(v2);
 	Print(v3);
 	Print(v4);
 }
-template <class T1>
-void Print(vector<T1>& v)
+void VectorCapacity()
 {
-	for (auto& e : v)
-	{
-		cout << e << "\t";
-	}
-	cout << endl;
+	vector<int> v1(10, 10);
+	cout << v1.size() << endl;
+	cout << v1.capacity() << endl;
+	cout << v1.empty() << endl;
+	
+	v1.resize(12, 11);
+	cout << v1.size() << endl;
+	v1.reserve(15);
+	cout << v1.capacity() << endl;
+}
+void VectorOperator()
+{
+	vector<int> v1;
+	//尾插
+	cout << "push_back:";
+	v1.push_back(1);
+	v1.push_back(2);
+	v1.push_back(3);
+	v1.push_back(4);
+	Print(v1);
+	//尾删
+	cout << "pop_back:";
+	v1.pop_back();
+	v1.pop_back();
+	v1.pop_back();
+	Print(v1);
+	//在结尾的地方插入
+	cout << "insert:";
+	v1.insert(v1.end(), 2);
+	v1.insert(v1.end(), 3);
+	v1.insert(v1.end(), 4);
+	Print(v1);
+	cout << "erase:";
+	//删除最后一个数
+
+	v1.erase(v1.end() - 1);
+	Print(v1);
 }
 
 string letterMap[10] = { "", "", "abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz" };
@@ -59,7 +98,9 @@ std::vector<string> letterCombinations(string digits) {
 
 int main()
 {
-	CreateTest();
+	//CreateTest();
+	//VectorCapacity();
+	VectorOperator();
 	//std::vector<string> s;
 	//s = letterCombinations("234");
 	//Print(s);
