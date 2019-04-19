@@ -73,11 +73,26 @@ void ListTest3()
 
 	Print(lst);
 }
+void ListTest4()
+{
+	List<int>  lst(4, 6);
+	cout << "List(size_t n, const T& val = T())£º";
+	Print(lst);
+
+	List<int> lst2(lst);
+	cout << "List(const List& list)£º";
+	Print(lst2);
+
+	List<int> lst3(lst2.begin(), lst2.end());
+	cout << "List(iterator firdt, iterator end)£º";
+	Print(lst3);
+}
 int main()
 {
-	ListTest1();
+	//ListTest1();
 	//ListTest2();
 	//ListTest3();
+	ListTest4();
 	system("pause");
 	return 0;
 }

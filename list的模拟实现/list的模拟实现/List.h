@@ -70,6 +70,43 @@ public:
 	PNode pnode_;//ListNode<T>*
 };
 
+template <class T>
+class ConstListIterator
+{
+public:
+	typedef ListNode<T>* PNode;
+	typedef ListIterator<T> Lit;
+	//迭代器的构造
+	ConstListIterator(PNode pnode = nullptr)
+		:pnode_(pnode)
+	{}
+	//迭代器的拷贝构造
+	ConstListIterator(const Lit& lit)
+	{
+		pnode_(lit.pnode_);
+	}
+	//迭代器的运算符
+		//解引用：取的是指针指向该节点的数据
+	const T& operator *()
+	{
+		return pnode_->val_;
+	}
+	//指针：->
+	const T* operator ->()
+	{
+		return &(pnode_->val_);
+	}
+	//判断
+	const bool operator !=(const Lit& lit)
+	{
+		return pnode_ != lit.pnode_;
+	}
+	const bool operator ==(const Lit& lit)
+	{
+		return !(*this != lit);
+	}
+	const PNode pnode_;//ListNode<T>*
+};
 
 
 //list类
@@ -82,27 +119,58 @@ public:
 	typedef ListNode<T>* PNode;
 	//迭代器
 	typedef ListIterator<T> iterator;
+	typedef ConstListIterator<T> const_iterator;
 	//构造函数---空的list
 	List()
 	{
 		Create();
 	}
-	////构造函数----n个val的list
-	//List(size_t n, const T& val = T())
-	//{
-	//	Create();
+	//构造函数----n个val的list
+	List(size_t n, const T& val = T())
+	{
+		Create();
+		for (size_t i = 0; i < n; ++i)
+		{
+			PushBack(val);
+		}
+	}
+	//拷贝构造函数
+	List(const List& list)
+	{
+		Create();
+		List<T> tmp(list.cbegin(),list.cend());
+		Swap(tmp);
+	}
+	//通过迭代器的构造
+	template <class Iterator>
+	List(Iterator firdt, Iterator end)
+	{
+		Create();
+		while (firdt != end)
+		{
+			PushBack(*firdt);
+			++firdt;
+		}
+	}
 
-	//}
-	////拷贝构造函数
-	//List(const List& list)
-	//{
-	//	head_ = list.head_;
-	//}
-	////通过迭代器的构造
-	//List(iterator firdt, iterator end)
-	//{
+	T& Front()
+	{
+		return head_->next_->val_;
+	}
 
-	//}
+	T& Back()
+	{
+		return head_->prev_->val_;
+	}
+	const T& Front() const
+	{
+		return head_->next_->val_;
+	}
+
+	const T& Back() const
+	{
+		return head_->prev_->val_;
+	}
 
 	void PushBack(const T& val)
 	{
@@ -166,6 +234,8 @@ public:
 			}
 		}
 	}
+
+
 	//迭代器
 	iterator begin()
 	{
@@ -175,14 +245,24 @@ public:
 	{
 		return iterator(head_);
 	}
+	const_iterator cbegin()
+	{
+		return const_iterator(head_->next_);
+	}
+	const_iterator cend()
+	{
+		return const_iterator(head_);
+	}
+
 	~List()
 	{
 		if (head_)
 		{
 			PNode tmp = head_->next_;
+			PNode next;
 			while (tmp != head_)
 			{
-				PNode next = tmp->next_;
+				next = tmp->next_;
 				delete tmp;
 				tmp = next;
 			}
@@ -193,7 +273,11 @@ public:
 
 
 
-
+	//工具
+	void Swap(List<T>& list)
+	{
+		swap(head_, list.head_);
+	}
 	size_t Size()
 	{
 		iterator move = begin();
@@ -206,6 +290,8 @@ public:
 		}
 		return len;
 	}
+
+
 private:
 	//头节点的指针
 	PNode head_;
