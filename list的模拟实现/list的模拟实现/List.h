@@ -20,29 +20,33 @@ public:
 //list不能直接用[]访问，所以我们必须实现它的迭代器
 //迭代器类--->原生指针++对象要是连续的。所以list迭代器不是原生指针，因为list不是连续的。所以要封装迭代器
 //封装的是list的结点
-template <class T>
+
+
+template <class T, class Ref, class Ptr>
+//可读可写
 class ListIterator
 {
 public:
 	typedef ListNode<T>* PNode;
-	typedef ListIterator<T> Lit;
+	typedef ListIterator<T, Ref, Ptr> Lit;
 	//迭代器的构造
 	ListIterator(PNode pnode = nullptr)
 		:pnode_(pnode)
 	{}
 	//迭代器的拷贝构造
 	ListIterator(const Lit& lit)
+		:pnode_(lit.pnode_)
 	{
-		pnode_(lit.pnode_);
+		//PNode tmpsnode_(lit.pnode_);
 	}
 	//迭代器的运算符
 		//解引用：取的是指针指向该节点的数据
-	T& operator *()
+	Ref operator *()
 	{
 		return pnode_->val_;
 	}
 		//指针：->
-	T* operator ->()
+	Ptr operator ->()
 	{
 		return &(pnode_->val_);
 	}
@@ -51,6 +55,7 @@ public:
 	{
 		return pnode_ != lit.pnode_;
 	}
+	//地址是否相同
 	bool operator ==(const Lit& lit)
 	{
 		return !(*this != lit);
@@ -70,43 +75,7 @@ public:
 	PNode pnode_;//ListNode<T>*
 };
 
-template <class T>
-class ConstListIterator
-{
-public:
-	typedef ListNode<T>* PNode;
-	typedef ListIterator<T> Lit;
-	//迭代器的构造
-	ConstListIterator(PNode pnode = nullptr)
-		:pnode_(pnode)
-	{}
-	//迭代器的拷贝构造
-	ConstListIterator(const Lit& lit)
-	{
-		pnode_(lit.pnode_);
-	}
-	//迭代器的运算符
-		//解引用：取的是指针指向该节点的数据
-	const T& operator *()
-	{
-		return pnode_->val_;
-	}
-	//指针：->
-	const T* operator ->()
-	{
-		return &(pnode_->val_);
-	}
-	//判断
-	const bool operator !=(const Lit& lit)
-	{
-		return pnode_ != lit.pnode_;
-	}
-	const bool operator ==(const Lit& lit)
-	{
-		return !(*this != lit);
-	}
-	const PNode pnode_;//ListNode<T>*
-};
+
 
 
 //list类
@@ -118,24 +87,24 @@ public:
 	typedef ListNode<T> Node;
 	typedef ListNode<T>* PNode;
 	//迭代器
-	typedef ListIterator<T> iterator;
-	typedef ConstListIterator<T> const_iterator;
+	typedef ListIterator<T, T&, T*> iterator;
+	typedef ListIterator<T, const T&, const T*> const_iterator;
 	//构造函数---空的list
 	List()
 	{
 		Create();
 	}
 	//构造函数----n个val的list
-	List(size_t n, const T& val = T())
+	List(int n, const T& val = T())
 	{
 		Create();
-		for (size_t i = 0; i < n; ++i)
+		for (int i = 0; i < n; ++i)
 		{
 			PushBack(val);
 		}
 	}
 	//拷贝构造函数
-	List(const List& list)
+	List(const List<T>& list)
 	{
 		Create();
 		List<T> tmp(list.cbegin(),list.cend());
@@ -152,6 +121,15 @@ public:
 			++firdt;
 		}
 	}
+	/*List(const_iterator  firdt, const_iterator  end)
+	{
+		Create();
+		while (firdt != end)
+		{
+			PushBack(*firdt);
+			++firdt;
+		}
+	}*/
 
 	T& Front()
 	{
@@ -179,11 +157,15 @@ public:
 		node->prev_ = head_->prev_;//插入结点的前驱指向原本头结点的前驱
 		head_->prev_->next_ = node;//原本头节点的前驱的后继指向新结点
 		head_->prev_ = node;//头节点的前驱指向新结点
+
+		//Insert(end(), val);
 	}
 	void PopBack()
 	{
 		head_->prev_->prev_->next_ = head_;
 		head_->prev_ = head_->prev_->prev_;
+
+		//Erase(end());
 	}
 	void PushFront(const T& val)
 	{
@@ -192,11 +174,13 @@ public:
 		node->prev_ = head_;
 		head_->next_->prev_ = node;
 		head_->next_ = node;
+		//Insert(begin(),val);
 	}
 	void PopFront()
 	{
 		head_->next_->next_->prev_ = head_;
 		head_->next_ = head_->next_->next_;
+		//Erase(begin())
 	}
 	iterator Insert(iterator pos, const T& val)
 	{
@@ -209,11 +193,15 @@ public:
 	}
 	iterator Erase(iterator pos)
 	{
-		PNode savenode = pos.pnode_->next_;
-		pos.pnode_->prev_->next_ = pos.pnode_->next_;
-		pos.pnode_->next_->prev_ = pos.pnode_->prev_;
-		delete pos.pnode_;//????
-		return iterator(savenode);
+		if (pos != end())
+		{
+			PNode savenode = pos.pnode_->next_;
+			pos.pnode_->prev_->next_ = pos.pnode_->next_;
+			pos.pnode_->next_->prev_ = pos.pnode_->prev_;
+			delete pos.pnode_;//????
+			return iterator(savenode);
+		}
+		return pos;
 	}
 	void Resize(size_t n,const T& val = T())
 	{
@@ -245,15 +233,20 @@ public:
 	{
 		return iterator(head_);
 	}
-	const_iterator cbegin()
+	const_iterator cbegin() const
 	{
 		return const_iterator(head_->next_);
 	}
-	const_iterator cend()
+	const_iterator cend() const
 	{
 		return const_iterator(head_);
 	}
 
+	List<T>& operator=(const List lst)
+	{
+		Swap(lst);
+		return *this;
+	}
 	~List()
 	{
 		if (head_)

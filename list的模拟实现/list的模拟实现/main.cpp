@@ -62,6 +62,7 @@ void ListTest3()
 	lst.PushFront(1);
 	cout << "头插：";
 	Print(lst);
+	//List<int> lst3(lst.cbegin(), lst.cend());
 
 	lst.Insert(lst.begin(), 0);
 	cout << "万能插：";
@@ -72,6 +73,10 @@ void ListTest3()
 	cout << "万能删：";
 
 	Print(lst);
+
+	List<int>  lst2(4, 6);
+	cout << "List(size_t n, const T& val = T())：";
+	Print(lst2);
 }
 void ListTest4()
 {
@@ -83,7 +88,7 @@ void ListTest4()
 	cout << "List(const List& list)：";
 	Print(lst2);
 
-	List<int> lst3(lst2.begin(), lst2.end());
+	List<int> lst3(lst.cbegin(), lst.cend());
 	cout << "List(iterator firdt, iterator end)：";
 	Print(lst3);
 }
