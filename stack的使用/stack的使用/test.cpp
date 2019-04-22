@@ -48,3 +48,72 @@ public:
 
 	}
 };
+class Myqueen {
+public:
+	Myqueen()
+	{
+
+	}
+
+	void push(int x)
+	{
+		st_tail_.push(x);
+	}
+
+	int pop()
+	{
+		if (!st_front_.empty())
+		{
+			int tmp = st_front_.top();
+			st_front_.pop();
+			return tmp;
+		}
+		else
+		{
+			while (!st_tail_.empty())
+			{
+				st_front_.push(st_tail_.top());
+				st_tail_.pop();
+			}
+			if (st_front_.empty())
+			{
+				return false;
+			}
+			else
+			{
+				int tmp = st_front_.top();
+				st_front_.pop();
+				return tmp;
+			}
+		}
+	}
+
+	int top()
+	{
+		if (!st_front_.empty())
+		{
+			
+			return st_front_.top();
+		}
+		else
+		{
+			while (!st_tail_.empty())
+			{
+				st_front_.push(st_tail_.top());
+				st_tail_.pop();
+			}
+			if (st_front_.empty())
+			{
+				return false;
+			}
+			else
+			{
+				return st_front_.top();
+			}
+		}
+	}
+private:
+	stack<int> st_tail_;
+	stack<int> st_front_;
+	
+};
