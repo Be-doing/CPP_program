@@ -2,6 +2,7 @@
 #include<vector>
 #include<iostream>
 using namespace std;
+//实现一个最下栈
 class MinStack {
 public:
 	/** initialize your data structure here. */
@@ -41,13 +42,49 @@ private:
 	stack<int> st_push_;
 	stack<int> st_min_;
 };
-
+//输入两个整数序列，第一个序列表示栈的压入顺序，请判断第二个序列是否可能
+//为该栈的弹出顺序。假设压入栈的所有数字均不相等。例如序列1, 2, 3, 4, 5是
+//某栈的压入顺序，序列4, 5, 3, 2, 1是该压栈序列对应的一个弹出序列，但
+//4, 3, 5, 1, 2就不可能是该压栈序列的弹出序列。（注意：这两个序列的长度是相等的）
 class Solution2 {
 public:
 	bool IsPopOrder(vector<int> pushV, vector<int> popV) {
-
+		if (pushV.size() != popV.size())
+		{
+			return false;
+		}
+		//记录pushV的下标
+		int index = 0;
+		//记录popV的下标
+		int outdex = 0;
+		//创建一个栈来进行入栈出栈
+		stack<int> test;
+		int in_size = pushV.size();
+		int out_size = popV.size();
+		//如果popV走完了，就说明只是一个出栈顺序。
+		while (outdex < out_size)
+		{
+			//如果栈还是空的我们就先入栈
+			//或者栈顶元素不等于我们的popV，就进行入栈
+			while (test.empty() || test.top() != popV[outdex])
+			{
+				//如果pushV走完了，test不是空栈，说明这不是一个出栈顺序
+				if (index < in_size)
+				{
+					test.push(pushV[index++]);
+				}
+				else
+				{
+					return false;
+				}
+			}
+			++outdex;
+			test.pop();
+		}
+		return true;
 	}
 };
+//用栈实现队列
 class Myqueen {
 public:
 	Myqueen()
