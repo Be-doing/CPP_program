@@ -52,20 +52,40 @@ public:
 		int left_ = treehigh(root->left);
 		int right_ = treehigh(root->right);
 
-		return left > right ? left + 1 : right_ + 1;
+		return left_ > right_ ? left_ + 1 : right_ + 1;
 	}
 	vector<vector<int>> levelOrder(TreeNode* root) {
-		vector<vector<int>> treeVec;
+
 		int height = treehigh(root);
-		queue<TreeNode*> qTree;
+	
+		vector<vector<int>> treeVec;
+		treeVec.resize(height);
+		queue<TreeNode*> Pnode;
+		queue<int> Index;
 		TreeNode* tmp = root;
 		if (!tmp)
 		{
 			return treeVec;
 		}
-		qTree.push(tmp);
-		while (!qTree.empty())
+		Pnode.push(tmp);
+		Index.push(0);
+		while (!Pnode.empty())
 		{
+			tmp = Pnode.front();
+			Pnode.pop();
+			int index = Index.front();
+			Index.pop();
+			treeVec[index].push_back(tmp->val);
+			if (tmp->left)
+			{
+				Pnode.push(tmp->left);
+				Index.push(index + 1);
+			}
+			if (tmp->right)
+			{
+				Pnode.push(tmp->right);
+				Index.push(index + 1);
+			}
 		}
 	}
 };
