@@ -69,6 +69,48 @@ void Operate()
 	s1.insert(s1.begin(), 3);
 	s1.insert(s1.begin(), 2);
 	s1.insert(s1.begin(), 1);
+	int tmp = 3;
+	list<int>::iterator lit = s1.begin();
+	while (tmp--)
+	{
+		++lit;
+	}
+	s1.insert(lit, 3);
 	cout << "insert:";
 	PrintList(s1);
+}
+
+void Iterator()
+{
+	list<int> s1;
+	s1.push_back(1);
+	s1.push_back(2);
+	s1.push_back(3);
+	s1.push_back(4);
+	cout << "push_back:";
+	PrintList(s1);
+
+	//list<int>::iterator lit = s1.begin();
+	s1.erase(s1.begin());
+	list<int>::iterator lit = s1.begin();
+
+	cout << *lit << endl;
+}
+
+#include<vector>
+
+void review()
+{
+	vector<int> v1;
+	cout << v1.capacity() << endl;
+	v1.push_back(1);
+	v1.push_back(2);
+	//vector<int>::iterator vit = v1.begin();后面的插入会使迭代器失效
+
+	v1.push_back(3);
+	v1.push_back(4);
+	vector<int>::iterator vit = v1.begin();//这里重新获取一下
+	cout << *vit << endl;
+
+	vector<int>::iterator vit2 = v1.erase(v1.begin());//获取返回值 
 }
