@@ -87,6 +87,69 @@ public:
 				Index.push(index + 1);
 			}
 		}
+		return treeVec;
+	}
+};
+class Solution2 {
+public:
+	int treehigh(TreeNode* root)
+	{
+		if (!root)
+		{
+			return 0;
+		}
+		int left_ = treehigh(root->left);
+		int right_ = treehigh(root->right);
+
+		return left_ > right_ ? left_ + 1 : right_ + 1;
+	}
+	vector<vector<int>> levelOrder(TreeNode* root) {
+
+		int height = treehigh(root);
+
+		vector<vector<int>> treeVec;
+		treeVec.resize(height);
+		queue<TreeNode*> Pnode;
+		queue<int> Index;
+		TreeNode* tmp = root;
+		if (!tmp)
+		{
+			return treeVec;
+		}
+		Pnode.push(tmp);
+		Index.push(0);
+		while (!Pnode.empty())
+		{
+			tmp = Pnode.front();
+			Pnode.pop();
+			int index = Index.front();
+			Index.pop();
+			treeVec[index].push_back(tmp->val);
+			if (tmp->left)
+			{
+				Pnode.push(tmp->left);
+				Index.push(index + 1);
+			}
+			if (tmp->right)
+			{
+				Pnode.push(tmp->right);
+				Index.push(index + 1);
+			}
+		}
+		return treeVec;
+	}
+	vector<vector<int>> levelOrderBottom(TreeNode* root) {
+		vector<vector<int>> tmp = levelOrder(root);
+		vector<vector<int>> res;
+		int num = 0;
+		int num2 = tmp.size() - 1;
+		while (num2 >= 0)
+		{
+			res.push_back(tmp[num2]);
+			++num;
+			--num2;
+		}
+		return res;
 	}
 };
 int main()
