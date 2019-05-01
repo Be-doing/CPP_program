@@ -2,7 +2,7 @@
 #include<vector>
 #include<iostream>
 using namespace std;
-//实现一个最下栈
+//实现一个最小栈
 class MinStack {
 public:
 	/** initialize your data structure here. */
@@ -154,3 +154,30 @@ private:
 	stack<int> st_front_;
 	
 };
+
+//stack的底层实现
+template<class T,class containser>
+
+class Stack
+{
+public:
+	void Push(const T& val)
+	{
+		con_.push_back();
+	}
+	void Pop()
+	{
+		con_.pop();
+	}
+	bool Empty()
+	{
+		return con_.empty();
+	}
+	T& top()
+	{
+		return con_.back();
+	}
+private:
+	containser con_;
+};
+
