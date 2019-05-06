@@ -163,20 +163,8 @@ public:
 		}
 	}
 
-	// 返回c在newString中第一次出现的位置
-	size_t Find(char c, size_t pos = 0) const
-	{
-		while (pos < size_)
-		{
-			if (str_[pos] == c)
-			{
-				return pos;
-			}
-			++pos;
-		}
-		return npos;
-	}
-	// 返回子串s在newString中第一次出现的位置
+	
+
 	// 判断字串
 	char* SubStr( char* str)
 	{
@@ -193,7 +181,7 @@ public:
 				{
 					if (*mathdst != *mathsrc)
 					{
-						return 0;
+						break;
 					}
 					++mathdst;
 					++mathsrc;
@@ -208,13 +196,40 @@ public:
 		}
 		return 0;
 	}
-	size_t Find(const char* str, size_t pos = 0) const
+	// 返回c在newString中第一次出现的位置
+	size_t Find(char c, size_t pos = 0) const
 	{
-		char* res = SubStr(str);
+		while (pos < size_)
+		{
+			if (str_[pos] == c)
+			{
+				return pos;
+			}
+			++pos;
+		}
+		return npos;
 	}
 	// 截取newString从pos位置开始的n个字符
-	newString SubStr(size_t pos, size_t n);
-
+	newString SubStr(size_t pos, size_t n)
+	{
+		assert(pos < size_ && n < size_ && pos < n);
+		size_t tmp = pos;
+		size_t dest = 0;
+		char * s = new char[n - pos];
+		while (tmp < n)
+		{
+			s[dest] = str_[tmp];
+			++dest;
+			++tmp;
+		}
+		newString str(s);
+		return str;
+	}
+	//返回str在newString中第一次出现的位置
+	size_t Find(const char* str, size_t pos = 0) const
+	{
+		
+	}
 	void Clear()
 	{
 		size_ = 0;
@@ -252,7 +267,14 @@ public:
 	{
 		return str_ + size_;
 	}
-
+	iterator begin() 
+	{
+		return str_;
+	}
+	iterator end()  
+	{
+		return str_ + size_;
+	}
 
 	//各类重载
 	char& operator[](size_t pos)
