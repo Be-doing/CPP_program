@@ -62,3 +62,66 @@ int Sum(int left, int right)
 {
 	return left + right;
 }
+
+//模板特化的应用——类型萃取
+
+//先定义两个类进行区分自定义类型和内置类型
+struct TruePodType//Plain old data structure，缩写为POD
+{
+	static bool Get()
+	{
+		return true;
+	}
+};
+
+struct FalsePodType
+{
+	static bool Get()
+	{
+		return false;
+	}
+};
+
+
+template<class T>
+struct TypeTraits
+{
+	typedef FalsePodType IsPODType;
+};
+
+template<>
+struct TypeTraits<int>
+{
+	typedef TruePodType IsPODType;
+};
+template<>
+struct TypeTraits<char>
+{
+	typedef TruePodType IsPODType;
+};
+template<>
+struct TypeTraits<double>
+{
+	typedef TruePodType IsPODType;
+};
+template<>
+struct TypeTraits<short>
+{
+	typedef TruePodType IsPODType;
+};
+
+template<class T>
+void Copy(T* dest, T* src, size_t size)
+{
+	if (TypeTraits<T>::IsPODType::Get())
+	{
+		memcpy(dest, src, sizeof(T)*size);
+	}
+	else
+	{
+		for (size_t i = 0; i < size; ++i)
+		{
+			dest[i] = src[i];
+		}
+	}
+}

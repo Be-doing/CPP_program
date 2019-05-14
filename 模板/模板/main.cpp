@@ -1,5 +1,5 @@
 #include"Ä£°å.h"
-
+#include<string>
 int main()
 {
 
@@ -12,16 +12,34 @@ int main()
 	//t.PushBack(6);
 
 	//Print(t);
-	int a = 3;
-	int b = 4;
-	cout << Sum(a, b) << endl;
+	//int a = 3;
+	//int b = 4;
+	//cout << Sum(a, b) << endl;
 
-	double c = 3.14;
-	double d = 3.52;
+	//double c = 3.14;
+	//double d = 3.52;
 
-	cout << Sum(c, d) << endl;
+	//cout << Sum(c, d) << endl;
 
-	cout << Sum<int>(a,d) << endl;
+	//cout << Sum<int>(a,d) << endl;
+
+	//string str1("string1");
+	//string str2;
+	char str1[] = "string";
+	char str2[7];
+	Copy(str2, str1, strlen(str1) + 1);
+	for (auto&e : str2)
+	{
+		cout << e << endl;
+	}
+	string str3[] = { "string","string","string" };
+	string str4[3];
+	Copy(str4, str3, 3);
+
+	for (auto&e : str4)
+	{
+		cout << e << endl;
+	}
 	system("pause");
 	return 0;
 }
