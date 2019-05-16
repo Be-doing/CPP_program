@@ -156,7 +156,7 @@ private:
 };
 
 //stackµÄµ×²ãÊµÏÖ
-template<class T,class containser>
+template<class T,class containser = deque<T>>
 
 class Stack
 {
