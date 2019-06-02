@@ -1,92 +1,60 @@
-#include<iostream>
-#include<string>
-using namespace std;
-class Child;
-class Father
-{
-public:
-	friend void Print(Father& f, Child& c);
-	Father(const string& name = "ÕÅÈý", int age = 10)
-		:name_(name)
-		,age_(age)
-	{
-			cout << "Father()" << endl;
-	}
-	virtual void Func(int tmp)//º¯ÊýÒþ²Ø
-	{
-		cout << tmp << endl;
-	}
-	~Father()
-	{}
-private:
-//protected:
-	string name_;
-	int age_;
-};
+ï»¿#include"Inheritance.h"
 
-class Child : public Father
+void test1()
 {
-public:
-	Child(const string& sex = "ÄÐ", int grade = 90)
-		:sex_(sex)
-		,grade_(grade)
-	{
-		//Father::name_ = "ÀîËÄ";
-		cout << "Child()" << endl;
-	}
-	virtual void Func()
-	{
-		cout << "NULL" << endl;
-	}
-	~Child()
-	{}
-private:
-	string sex_;
-	int grade_;
-};
-void Print(Father& f, Child& c)
-{
-	cout << f.name_ << endl;
-	cout << c.name_ << endl;
+	Student stu1;
 }
+
+void test2()
+{
+	Person p1;
+	Person* pp;
+
+	Student stu1;
+
+	p1 = stu1;//å¯¹è±¡èµ‹å€¼
+	p1.setName("æŽå››");
+
+	pp = &stu1;//æŒ‡é’ˆèµ‹å€¼
+	pp->setName("çŽ‹äº”");
+
+	Person& rp = stu1;//å¼•ç”¨èµ‹å€¼
+	rp.setName("èµµå…­");
+
+	
+	Student* pstu = (Student*)pp;//å¼ºåˆ¶è½¬æ¢
+	pp->setName("å‘¨ä¸ƒ");
+}
+
+void test3()
+{
+	Child c1;
+}
+
+void test4()
+{
+	Father f1("é’±ä¸€",18);
+	Father f2 = f1;
+
+	Child c;
+
+	Child c2 = c;
+}
+void test5()
+{
+	A a;
+	B b;
+	C c;
+}
+
+void test6()
+{
+	Self s;
+}
+
 int main()
 {
-	//Father f;
-	//Child c;
-
-	//f = c;
-	//cout << f.name_ << endl;
-
-	//Print(f, c);
-
-	int a = 10;
-	int* b = &a;
-
-	cout << "aµÄµØÖ·£º" << &a << endl;
-	cout << "Ö¸ÕëÖ¸ÏòµÄµØÖ·" << b << endl;
-	cout << "bµÄµØÖ·£º" << &b << endl;
+	test6();
 	system("pause");
 	return 0;
 }
-
-class Car { public:    virtual void Drive() final {} };
- 
-class Benz :public Car { public:    virtual void Drive() {cout << "Benz-ÊæÊÊ" << endl;} };
-
-class Car{ public:    virtual void Drive(){} }; // 2.override ÐÞÊÎÅÉÉúÀàÐéº¯ÊýÇ¿ÖÆÍê³ÉÖØÐ´£¬Èç¹ûÃ»ÓÐÖØÐ´»á±àÒë±¨´í class Benz :public Car { public:    virtual void Drive() override {cout << "Benz-ÊæÊÊ" << endl;} };
-
-
-
-class Base { public:    virtual void Func1()    {        cout << "Base::Func1()" << endl;    }
- 
-    virtual void Func2()    {        cout << "Base::Func2()" << endl;    }
- 
-    void Func3()    {        cout << "Base::Func3()" << endl;    }
- 
-private:    int _b = 1; };
- 
-class Derive : public Base { public:    virtual void Func1()    {        cout << "Derive::Func1()" << endl;    } private:    int _d = 2; };
- 
-int main() {    Base b;    Derive d;
- 
-    return 0; }
