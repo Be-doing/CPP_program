@@ -51,10 +51,14 @@ void test6()
 {
 	Self s;
 }
-
+void test7()
+{
+	D d;
+	//d.a_ = 10;
+}
 int main()
 {
-	test6();
+	test7();
 	system("pause");
 	return 0;
 }

@@ -147,7 +147,6 @@ public:
 		:a_(a)
 	{}
 	static void Print(const A& a);
-private:
 	int a_;
 };
 void A::Print(const A& a)
@@ -158,25 +157,36 @@ void Display(const A& a)
 {
 	cout << a.a_ << endl;
 }
-class B : public A
+class B :  public A
 {
 public:
 	B(const int& b = int())
-		:A::A()
+		:A()
 		,b_(b)
 	{}
 private:
 	int b_;
 };
-class C : public A
+class C :  public A
 {
 public:
 	C(const int& c = int())
-		:A::A()
+		:A()
 		, c_(c)
 	{}
 private:
 	int c_;
+};
+class D : public B, public C
+{
+public:
+	D(const int& d = int())
+		:B()
+		,C()
+		, d_(d)
+	{}
+private:
+	int d_;
 };
 //class Car 
 //{ 
