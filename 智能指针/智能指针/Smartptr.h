@@ -73,9 +73,9 @@ public:
 		cout << "Auto_Ptr()" << endl;
 	}
 	Auto_Ptr(Auto_Ptr<T>& ptr)//这里是要修改不能要const属性
-		:autoptr_(ptr)
+		:autoptr_(ptr.autoptr_)
 	{
-		ptr = nullptr;//当对象拷贝或者赋值后，前面的智能指针就悬空
+		ptr.autoptr_ = nullptr;//当对象拷贝或者赋值后，前面的智能指针就悬空
 		cout << "Auto_Ptr(&)" << endl;
 	}
 	~Auto_Ptr()
@@ -94,8 +94,10 @@ public:
 			{
 				delete autoptr_;//如果原来的智能指针是指向某一个对象时要释放原来的资源
 			}
-			autoptr_(ptr);
+			autoptr_ = ptr.autoptr_;
+			ptr.autoptr_ = nullptr;
 		}
+		return *this;
 	}
 	//既然是指针就会有++，->，*等操作
 	T& operator*()
@@ -146,7 +148,7 @@ template <class T>
 class SharePtr
 {
 public:
-	SharePtr(T*& ptr)
+	SharePtr(T* ptr = nullptr)
 		:shareptr_(ptr)
 		,pcount_(new int(1))
 		,pmutex_(new mutex)
@@ -158,8 +160,59 @@ public:
 		, pcount_(ptr.pcount_)
 		, pmutex_(ptr.pmutex_)
 	{
-		
+		AddCount();
 		cout << "SharePtr(&)" << endl;
+	}
+	~SharePtr()
+	{
+		cout << "~SharePtr()" << endl;
+		Release();
+	}
+	void AddCount()
+	{
+		pmutex_->lock();
+		++(*pcount_);
+		pmutex_->unlock();
+	}
+	SharePtr<T> operator=(SharePtr<T>& ptr)
+	{
+		if (this != &ptr)
+		{
+			Release();//删除旧的资源，由于count初始化时就是1，所以不会是-1
+			shareptr_ = ptr.shareptr_;
+			pmutex_ = ptr.pmutex_;
+			AddCount();
+		}
+		return *this;
+	}
+	T& operator*()
+	{
+		return *shareptr_;
+	}
+	T* operator->()
+	{
+		return shareptr_;
+	}
+	int UseCount()
+	{
+		return *pcount_;
+	}
+private:
+	void Release()
+	{
+		bool mutexflag = false;
+		pmutex_->lock();
+		if (--(*pcount_) == 0)
+		{
+			delete shareptr_;
+			delete pcount_;
+			mutexflag = true;
+		}
+		pmutex_->unlock();
+		if (mutexflag == true)
+		{
+			delete pmutex_;
+		}
 	}
 private:
 	T* shareptr_;

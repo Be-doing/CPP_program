@@ -24,7 +24,9 @@ void AutoPtrTest()
 	//auto_ptr<Student> ptr2 = ptr;//这里其实相当于拷贝构造
 
 	Auto_Ptr<Student> ptr(new Student);
-	ptr->Print();
+	Auto_Ptr<Student> ptr2(new Student);
+	ptr2 = ptr;
+	ptr2->Print();
 }
 void UniquePtrTest()
 {
@@ -37,10 +39,19 @@ void UniquePtrTest()
 	UniquePtr<Student> ptr(new Student);
 	ptr->Print();
 }
+void SharePtrTest()
+{
+	SharePtr<Student> ptr(new Student);
+	SharePtr<Student> ptr1(ptr);
+	SharePtr<Student> ptr2(ptr);
+
+	cout << ptr.UseCount() << endl;
+}
 int main()
 {
 	//AutoPtrTest();
-	UniquePtrTest();
+	//UniquePtrTest();
+	SharePtrTest();
 	system("pause");
 	return 0;
 }
