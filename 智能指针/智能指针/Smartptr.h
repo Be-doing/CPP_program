@@ -219,3 +219,16 @@ private:
 	int* pcount_;
 	mutex* pmutex_;
 };
+
+struct ListNode
+{
+	int data = 0;
+	shared_ptr<ListNode> prev = nullptr;
+	shared_ptr<ListNode> next = nullptr;
+
+	~ListNode()
+	{
+		cout << "~ListNode()" << endl;
+	}
+};
+
