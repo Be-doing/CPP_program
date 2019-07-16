@@ -1,240 +1,204 @@
-#pragma once
 #include<iostream>
 using namespace std;
-
-template<class T>
-struct AVLTreeNode
+template <class T>
+struct BTnode
 {
-	AVLTreeNode(const T& data)
-		: pLeft_(nullptr)
-		, pRight_(nullptr)
-		, pParent_(nullptr)
-		, data_(data)
-		, bf_(0)
+	BTnode(const T& val = T())
+	:val_(val)
+	,left_(nullptr)
+	,right_(nullptr)
+	,parent_(nullptr)
+	,bf_(0)
 	{}
-	AVLTreeNode<T>* pLeft_; // 该节点的左孩子
-	AVLTreeNode<T>* pRight_; // 该节点的右孩子
-	AVLTreeNode<T>* pParent_; // 该节点的双亲
-	T data_;
-	int bf_; // 该节点的平衡因子
+	T val_;
+	BTnode<T>* left_;
+	BTnode<T>* right_;
+	BTnode<T>* parent_;//该节点的父结点
+	int bf_;//该节点的平衡因子
 };
-
 template<class T>
-
 class AVLTree
 {
-public:
-	typedef AVLTreeNode<T> Node;
-	typedef AVLTreeNode<T>* pNode;
-
-	bool Insert(const T& val)//AVL树插入 = 插入 + 调整
-	{
-
-		//插入时和搜索树一样
-		if (root_ == nullptr)
+	typedef BTnode<T> Node;
+	typedef BTnode<T>* pNode;
+	public:
+		AVLTree()
+		:root_(nullptr)
+		{}
+		//左旋
+		//父结点右边的右边高
+		//即平衡因子就是
+		//父结点：2
+		//右孩子：1
+		void RotateLeft(pNode parent)
 		{
-			root_ = new Node(val);
-		}
-		pNode cur = root_;
-		pNode parent = nullptr;
-		while (cur)
-		{
-			if (cur->data_ == val)
+			pNode subR = parent->right_;
+			pNode subRL = subR->left_;
+			
+			subR->left_ = parent;
+			parent->right_ = subRL;
+			if(subRL)//如果存在
+				subRL->parent_ = parent;
+			if (parent->parent_ == nullptr)
 			{
-				return false;
+				subR->parent_ = nullptr;
+				root_ = subR;
 			}
-			else if (cur->data_ > val)
+			else
 			{
+				subR->parent_ = parent->parent_;
+				if (parent->parent_->left_ == parent)
+					parent->parent_->left_ = subR;
+				else
+					parent->parent_->right_ = subR;
+			}
+				
+			parent->parent_ = subR;
+			parent->bf_ = subR->bf_ = 0;
+		}
+		//右旋
+		//父结点的左子树的左边高
+		//平衡因子：
+		//父结点：-2
+		//左孩子：-1
+		void RotateRight(pNode parent)
+		{
+			pNode subL = parent->left_;
+			pNode subLR = subL->right_;
+			subL->right_ = parent;
+			parent->left_ = subLR;
+			if(subLR)
+				subLR->parent_ = parent;
+			if (parent->parent_ == nullptr)
+			{
+				subL->parent_ = nullptr;
+				root_ = subL;
+			}
+				
+			else
+			{
+				subL->parent_ = parent->parent_;
+				if (parent->parent_->left_ == parent)
+					parent->parent_->left_ = subL;
+				else
+					parent->parent_->right_ = subL;
+			}
+			parent->parent_ = subL;
+			parent->bf_ = subL->bf_ = 0;
+		}
+		bool Insert(const T& val)
+		{
+			//AVL插入 = 二叉搜索树的插入 + 调整（旋转）
+			//一开始就是二叉搜索树的插入
+			if (!root_)
+			{
+				root_ = new Node(val);
+				return true;
+			}
+			pNode cur = root_;
+			pNode parent = nullptr;
+			while(cur)
+			{
+				if(val == cur->val_)
+					return false;
 				parent = cur;
-				cur = cur->pLeft_;
+				if(val > cur->val_)
+					cur = cur->right_;
+				else
+					cur = cur->left_;
 			}
-			else if (cur->data_ < val)
-			{
-				parent = cur;
-				cur = cur->pRight_;
-			}
-		}
-		cur = new Node(val);
-		if (parent->data_ > val)
-		{
-			parent->pLeft_ = cur;
-		}
-		else
-		{
-			parent->pRight_ = cur;
-		}
-		//调整 = 更新平衡因子 + 旋转
-		//调整平衡因子
-		while (parent)//直到根节点
-		{
-			if (parent->pLeft_ = cur)
-			{
-				--parent->bf_;
-			}
+			cur = new Node(val);//完成插入
+			if(val < parent->val_)
+				parent->left_ = cur;
 			else
+				parent->right_ = cur;
+			cur->parent_ = parent;
+			//此时就开始调整
+			while(parent)
 			{
-				++parent->bf_;
-			}
-
-
-			//此时平衡因子改变后有三种情况
-			//1、bf == 0
-			//2、bf == -1 或者 bf == 1
-			//3、bf == -2 或者 bf == 2
-			if (parent->bf_ == 0)//更新后平衡因子是0的时候，
-										//说明未更新时就是1或者-1，现在补齐了，高度没有变化。上面的平衡因子不会发生改变。
-			{
-				break;//停止更新
-			}
-			else if(parent->bf_ == -1 || parent->bf_ == 1)//说明，开始的时候平衡因子是0，现在高度发生了变化，继续向上更新
-			{
-				cur = parent;
-				parent = parent->pParent_;//继续向上更新
-			}
-			else if (parent->bf_ == -2 || parent->bf_ == 2)//平衡因子违反平衡树的性质，需要对其进行旋转处理
-			{
-				//旋转
-				//1、 新节点插入到较高左子树的左侧---左左：右单旋
-				//2、 新节点插入到较高右子树的右侧---右右：左单旋
-				//3、 新节点插入到较高左子树的右侧---左右：先左单旋再右单旋
-				//4、 新节点插入到较高右子树的左侧---右左：先右单旋再左单旋
-
-
-
-				//1、右单旋：parent->bf == -2		cur->bf == -1
-					//左边的左边高
-				if (parent->bf_ == -2 && cur->bf_ == -1)
+				if(cur == parent->left_)
+					--parent->bf_;
+				else
+					++parent->bf_;
+				if(parent->bf_ == 0)//说明未更新时就是1或者-1，现在补齐了，
+					break;			//高度没有变化。上面的平衡因子不会发生改变。
+				else if(parent->bf_ == 1 || parent->bf_ == -1)
+				//说明，开始的时候平衡因子是0，现在高度发生了变化，继续向上更新
 				{
-					RotateR(parent);
+					cur = parent;
+					parent = parent->parent_;
 				}
-				else if (parent->bf_ == 2 && cur->bf_ == 1)
+				else
+				//平衡因子违反平衡树的性质，需要对其进行旋转处理
 				{
-					RotateL(parent);
-				}
-
-				//右左双旋：右边的左边高
-				//先右旋再左旋
-				//parent->bf = 2 cur->bf = -1
-				else if (parent->bf_ == 2 && cur->bf_ == -1)
-				{
-					pNode subR = parent->pRight_;
-					pNode subRL = subR->pLeft_;
-					int bf = subRL->bf_;
-					RotateR(subR);
-					RotateL(parent);
-					if (bf == -1)
+					//旋转
+					//1、 新节点插入到较高左子树的左侧---左左：右单旋bf:2	1
+					//2、 新节点插入到较高右子树的右侧---右右：左单旋bf:-2	-1
+					//3、 新节点插入到较高左子树的右侧---左右：先左单旋再右单旋bf:-2	1
+					//4、 新节点插入到较高右子树的左侧---右左：先右单旋再左单旋bf:2		-1
+					if(cur->bf_ == 1 && parent->bf_ == 2)//左旋
 					{
-						parent->bf_ = 0;
-						subR->bf_ = 1;
+						RotateLeft(parent);		
 					}
-					else if (bf == 1)
+					else if(cur->bf_ == -1 && parent->bf_ == -2)//右旋
 					{
-						parent->bf_ = -1;
-						subR->bf_ = 0;
+						RotateRight(parent);
 					}
-				}
-				//左右双旋：左边的右边高
-				//parent->bf = -2,cur->bf = 1
-				else if (parent->bf_ == -2 && cur->bf_ == 1)
-				{
-					pNode subL = parent->pLeft;
-					pNode subLR = subL->pRight_;
-					int bf = subLR->bf_;
-					RotateR(subL);
-					RotateL(parent);
-					if (bf == 1)
+					else if(cur->bf_ == -1 && parent->bf_ == 2)//右左双旋
 					{
-						//右边高
-						parent->bf_ = 1;
-						subL->bf_ = 0;
+						pNode subR = parent->right_;
+						pNode subRL = subR->left_;
+						int bf = subRL->bf_;
+						RotateRight(subR);
+						RotateLeft(parent);
+						if(bf == 1)
+						{
+							parent->bf_ = -1;
+							subR->bf_ = 0;
+						}
+						else if(bf == -1)
+						{
+							parent->bf_ = 0;
+							subR->bf_ = 1;
+						}
 					}
-					else if (bf == -1)
+					else if(cur->bf_ == 1 && parent->bf_ == -2)//左右双旋
 					{
-						//左边高
-						parent->bf_ = 0;
-						subL->bf_ = 1;
+						pNode subL = parent->left_;
+						pNode subLR = subL->right_;
+						int bf = subLR->bf_;
+						RotateLeft(subL);
+						RotateRight(parent);
+						if(bf == -1)//左边高
+						{
+							parent->bf_ = 1;
+							subL->bf_ = 0;
+						}
+						else if(bf == 1)//右边高
+						{
+							parent->bf_ = 0;
+							subL->bf_ = -1;
+						}
 					}
 				}
 			}
+			return true;
 		}
-		return true;
-	}
-
-	//右旋，以双亲结点为轴
-	void RotateR(pNode parent)
-	{
-		pNode subL = parent->pLeft_;
-		pNode subLR = subL->pRight_;
-
-		subL->pRight_ = parent;
-		parent->pLeft_ = subLR;
-
-		if (subLR)
+		void Print()
 		{
-			subLR->pParent_ = parent;
+			inorder__(this->root_);
+			cout << endl;
 		}
-		if (parent == header_->pParent_)
-		{
-			header_->pParent_ = subL;
-			subL->pParent_ = nullptr;
-		}
-		else
-		{
-			pNode gpraent = parent->pParent_;
-			if (gpraent->pLeft_ = parent)
-			{
-				gpraent->pLeft_ = subL;
-			}
-			else
-			{
-				gpraent->pRight_ = subL;
-			}
-			subL->pParent_ = gpraent;
-		}
+     private:
+		 void inorder__(pNode root)
+		 {
+			 if (!root)
+				 return;
+			 inorder__(root->left_);
+			 cout << root->val_ << " ";
+			 inorder__(root->right_);
+		 }
 
-		parent->pParent_ = subL;
-	}
-	//左旋：右边的右边高	parent->bf = 2   cur->bf = 1
-	//以双亲结点为轴
-	void RotateL(pNode parent)
-	{
-		pNode subR = parent->pRight_;
-		pNode subRL = subR->pLeft_;
-
-		subR->pLeft_ = parent;
-		parent->pRight_ = subRL;
-
-		if (subRL)
-		{
-			subRL->pParent_ = parent;
-		}
-
-		if (parent == header_->pParent_)
-		{
-			subR->pParent_ = nullptr;
-			header_->pParent_ = subR;
-
-		}
-		else
-		{
-			pNode gparent = parent->pParent_;
-
-			if (gparent->pLeft_ == parent)
-			{
-				gparent->pLeft_ = subR;
-			}
-			else
-			{
-				gparent->pRight_ = subR;
-			}
-			subR->pParent_ = gparent;
-		}
-		parent->pParent_ = subR;
-	}
-
-
-
-
-private:
-	pNode root_ = nullptr;//c++11语法
+	private:
+	pNode root_;
 };
