@@ -1,5 +1,5 @@
 #include "Map.h"
-
+#include "Set.h"
 void MapTest()
 {
 	Map<int, int> m;
@@ -14,9 +14,24 @@ void MapTest()
 		cout << e.first << "--" << e.second << endl;
 	}
 }
+
+void SetTest()
+{
+	Set<int> s;
+	s.Insert(9);
+	s.Insert(3);
+	s.Insert(2);
+	s.Insert(6);
+	s.Insert(8);
+
+	for (const auto& e : s)
+		cout << e << endl;
+
+}
 int main()
 {
-	MapTest();
+	//MapTest();
+	SetTest();
 	system("pause");
 	return 0;
 }

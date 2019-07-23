@@ -2,21 +2,21 @@
 #pragma once
 #include"RBTree.h"
 #include<map>
-template<class K, class V>
-class Map
+template<class V>
+class Set
 {
 
 	struct KeyOfVal
 	{
-		const K& operator()(const pair<K, V>& data)
+		 const V& operator()(const V& data)
 		{
-			return data.first;
+			return data;
 		}
 	};
-	typedef typename BRTree<KeyOfVal, pair<K, V>>::iterator iterator;
+	typedef typename BRTree<KeyOfVal,  V>::iterator iterator;
 
 public:
-	bool Insert(const pair<K, V>& data)
+	bool Insert(const V& data)
 	{
 		return bt_.Insert(data);
 	}
@@ -30,6 +30,6 @@ public:
 		return bt_.end();
 	}
 private:
-	BRTree<KeyOfVal, pair<K, V>> bt_;
+	BRTree<KeyOfVal,  V> bt_;
 
 };
