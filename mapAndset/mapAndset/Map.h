@@ -16,11 +16,16 @@ class Map
 	
 public:
 	//与源码不同
-	bool Insert(const pair<K, V>& data)
+	pair<iterator,bool> Insert(const pair<K, V>& data)
 	{
 		return bt_.Insert(data);
 	}
-	
+	//map是由[]的操作
+	V& operator[](const K& key)
+	{
+		pair<iterator,bool> ret = bt_.Insert(make_pair(key,v()));
+		return ret.first->second;
+	}
 	iterator begin()
 	{
 		return bt_.begin();
