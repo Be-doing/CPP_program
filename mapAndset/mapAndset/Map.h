@@ -15,11 +15,12 @@ class Map
 	typedef typename BRTree<KeyOfVal, pair<K, V>>::iterator iterator;
 	
 public:
+	//与源码不同
 	bool Insert(const pair<K, V>& data)
 	{
 		return bt_.Insert(data);
 	}
-
+	
 	iterator begin()
 	{
 		return bt_.begin();
