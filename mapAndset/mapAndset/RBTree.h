@@ -2,24 +2,24 @@
 #include<iostream>
 using namespace std;
 
-// ½ÚµãµÄÑÕÉ«
+// èŠ‚ç‚¹çš„é¢œè‰²
 enum Color { 
 	RED, 
 	BLACK
 };
-// ºìºÚÊ÷½ÚµãµÄ¶¨Òå
+// çº¢é»‘æ ‘èŠ‚ç‚¹çš„å®šä¹‰
 template<class T>
 struct RBTreeNode
 {
 	typedef RBTreeNode<T> Node;
 	typedef RBTreeNode<T>* pNode;
 
-	pNode pLeft_ = nullptr; // ½ÚµãµÄ×óº¢×Ó
-	pNode pRight_ = nullptr; // ½ÚµãµÄÓÒº¢×Ó
-	pNode pParent_ = nullptr; // ½ÚµãµÄË«Ç×(ºìºÚÊ÷ĞèÒªĞı×ª£¬ÎªÁËÊµÏÖ¼òµ¥¸ø³ö¸Ã×Ö¶Î)
-	T data_; // ½ÚµãµÄÖµÓò£¬×Ô¶¨ÒåÀàĞÍµ÷ÓÃ×Ô¼ºµÄÄ¬ÈÏ¹¹Ôì
-	Color color_ = RED; // ½ÚµãµÄÑÕÉ«,³õÊ¼»¯³ÉºÚÉ«£¬²åÈëÊ±Òª¸Ä³ÉºìÉ«£¬ÒòÎª²åÈëºÚÉ«¾ÍÆÆ»µÁËºìºÚÊ÷µÄĞÔÖÊ
-						//Ã¿ÌõÂ·¾¶ÉÏµÄºÚÉ«½áµãÊıÁ¿ÊÇÏàÍ¬µÄ
+	pNode pLeft_ = nullptr; // èŠ‚ç‚¹çš„å·¦å­©å­
+	pNode pRight_ = nullptr; // èŠ‚ç‚¹çš„å³å­©å­
+	pNode pParent_ = nullptr; // èŠ‚ç‚¹çš„åŒäº²(çº¢é»‘æ ‘éœ€è¦æ—‹è½¬ï¼Œä¸ºäº†å®ç°ç®€å•ç»™å‡ºè¯¥å­—æ®µ)
+	T data_; // èŠ‚ç‚¹çš„å€¼åŸŸï¼Œè‡ªå®šä¹‰ç±»å‹è°ƒç”¨è‡ªå·±çš„é»˜è®¤æ„é€ 
+	Color color_ = RED; // èŠ‚ç‚¹çš„é¢œè‰²,åˆå§‹åŒ–æˆé»‘è‰²ï¼Œæ’å…¥æ—¶è¦æ”¹æˆçº¢è‰²ï¼Œå› ä¸ºæ’å…¥é»‘è‰²å°±ç ´åäº†çº¢é»‘æ ‘çš„æ€§è´¨
+						//æ¯æ¡è·¯å¾„ä¸Šçš„é»‘è‰²ç»“ç‚¹æ•°é‡æ˜¯ç›¸åŒçš„
 };
 
 template <class T>
@@ -65,7 +65,9 @@ struct RBTreeIterator
 				node_ = parent;
 				parent = node_->pParent_;
 			}
-			node_ = parent;
+			//é˜²æ­¢æ²¡æœ‰å³å­æ ‘ï¼Œé€ æˆæ­»å¾ªç¯
+			if(node_->pRight_ != parent)
+				node_ = parent;
 		}
 		return *this;
 	}
@@ -102,10 +104,11 @@ public:
 	{
 		return iterator(header_);
 	}
-	bool Insert(const V& data)
+	//å‘æºç å¯¹é½
+	pair<iterator,bool> Insert(const V& data)
 	{
 		if (header_->pParent_ == nullptr)
-		{//¿ÕÊ÷µÄÇé¿öÏÂ£¬»¥ÏàÈÏµù
+		{//ç©ºæ ‘çš„æƒ…å†µä¸‹ï¼Œäº’ç›¸è®¤çˆ¹
 			pNode root = new Node;
 			root->pParent_ = header_;
 			header_->pParent_ = root;
@@ -115,7 +118,7 @@ public:
 			header_->pLeft_ = root;
 			header_->pRight_ = root;
 
-			return true;
+			return make_pair<iterator(root), true>;
 		}
 
 
@@ -136,7 +139,7 @@ public:
 			}
 			else
 			{
-				return false;
+				return make_pair<iterator(cur), false>;
 			}
 		}
 
@@ -153,27 +156,27 @@ public:
 		}
 		newnode->pParent_ = parent;
 		cur = newnode;
-		//1¡¢ÊåÊå´æÔÚÇÒÎªºì¡ª¡ª¡ª¡ªĞŞ¸ÄÑÕÉ«£¬½«p,u¸ÄÎªºÚ£¬g¸ÄÎªºì£¬È»ºó°Ñgµ±³Écur£¬¼ÌĞøÏòÉÏµ÷Õû£¬Ö±µ½Óö¼ûºÚµÄ¡£
-		//2¡¢	ÊåÊå´æÔÚÇÒÎªºÚ»òÕß²»´æÔÚ£¬ÒÔ×æ¸¸½áµãÎªÖáĞı×ª£¬
-			//Í¬Æ½ºâÊ÷¡ª¡ª
-				//1£©pÎª×ócÎª×ó£¬ÓÒĞı
-				//2£©pÎªÓÒcÎªÓÒ£¬×óĞı
-				//3£©pÎª×ócÎªÓÒ£¬×óÓÒĞı
-				//4£©pÎªÓÒcÎª×ó£¬ÓĞ×óĞı
+		//1ã€å”å”å­˜åœ¨ä¸”ä¸ºçº¢â€”â€”â€”â€”ä¿®æ”¹é¢œè‰²ï¼Œå°†p,uæ”¹ä¸ºé»‘ï¼Œgæ”¹ä¸ºçº¢ï¼Œç„¶åæŠŠgå½“æˆcurï¼Œç»§ç»­å‘ä¸Šè°ƒæ•´ï¼Œç›´åˆ°é‡è§é»‘çš„ã€‚
+		//2ã€	å”å”å­˜åœ¨ä¸”ä¸ºé»‘æˆ–è€…ä¸å­˜åœ¨ï¼Œä»¥ç¥–çˆ¶ç»“ç‚¹ä¸ºè½´æ—‹è½¬ï¼Œ
+			//åŒå¹³è¡¡æ ‘â€”â€”
+				//1ï¼‰pä¸ºå·¦cä¸ºå·¦ï¼Œå³æ—‹
+				//2ï¼‰pä¸ºå³cä¸ºå³ï¼Œå·¦æ—‹
+				//3ï¼‰pä¸ºå·¦cä¸ºå³ï¼Œå·¦å³æ—‹
+				//4ï¼‰pä¸ºå³cä¸ºå·¦ï¼Œæœ‰å·¦æ—‹
 
-		while (cur != header_ ->pParent_ && cur->pParent_->color_ == RED)//Ö±µ½Óö¼ûºÚµÄ»òÕßÊÇ¸ù½Úµã
+		while (cur != header_ ->pParent_ && cur->pParent_->color_ == RED)//ç›´åˆ°é‡è§é»‘çš„æˆ–è€…æ˜¯æ ¹èŠ‚ç‚¹
 		{
-			//cur£º²åÈëÊ±µÄ½áµã
-			//parent£ºcurµÄ¸¸Ç×½áµã
-			//gparent£ºcurµÄ×æ¸¸½áµã
-			//uncle£ºcurµÄÊåÊå½áµã
+			//curï¼šæ’å…¥æ—¶çš„ç»“ç‚¹
+			//parentï¼šcurçš„çˆ¶äº²ç»“ç‚¹
+			//gparentï¼šcurçš„ç¥–çˆ¶ç»“ç‚¹
+			//uncleï¼šcurçš„å”å”ç»“ç‚¹
 			pNode parent = cur->pParent_;
 			pNode gparent = parent->pParent_;
-			if (gparent->pLeft_ == parent)//¸¸Ç×ÔÚ×ö£¬ÔòÊåÊåÔÚÓÒ
+			if (gparent->pLeft_ == parent)//çˆ¶äº²åœ¨åšï¼Œåˆ™å”å”åœ¨å³
 			{
 				pNode uncle = gparent->pRight_;
 				if (uncle && uncle->color_ == RED)
-	//ÊåÊå´æÔÚÇÒÎªºì¡ª¡ª¡ª¡ªĞŞ¸ÄÑÕÉ«£¬½«p, u¸ÄÎªºÚ£¬g¸ÄÎªºì£¬È»ºó°Ñgµ±³Écur£¬¼ÌĞøÏòÉÏµ÷Õû£¬Ö±µ½Óö¼ûºÚµÄ¡£
+	//å”å”å­˜åœ¨ä¸”ä¸ºçº¢â€”â€”â€”â€”ä¿®æ”¹é¢œè‰²ï¼Œå°†p, uæ”¹ä¸ºé»‘ï¼Œgæ”¹ä¸ºçº¢ï¼Œç„¶åæŠŠgå½“æˆcurï¼Œç»§ç»­å‘ä¸Šè°ƒæ•´ï¼Œç›´åˆ°é‡è§é»‘çš„ã€‚
 				{
 					parent->color_ = uncle->color_ = BLACK;
 					gparent->color_ = RED;
@@ -181,8 +184,8 @@ public:
 				}
 				else
 				{
-					//ÊåÊåÎª¿Õ»òÕßÊÇºÚÉ«£¬¶¼ĞèÒªĞı×ª
-				//1£©pÎª×ócÎª×ó£¬ÓÒĞı¡¢Èç¹ûpÎª×ócÎªÓÒ£¬×óÓÒĞı
+					//å”å”ä¸ºç©ºæˆ–è€…æ˜¯é»‘è‰²ï¼Œéƒ½éœ€è¦æ—‹è½¬
+				//1ï¼‰pä¸ºå·¦cä¸ºå·¦ï¼Œå³æ—‹ã€å¦‚æœpä¸ºå·¦cä¸ºå³ï¼Œå·¦å³æ—‹
 					if (parent->pRight_ == cur)
 					{
 						RotateL(parent);
@@ -194,11 +197,11 @@ public:
 					break;
 				}
 			}
-			else     //·´Ö®¸¸Ç×ÔÚÓÒÊåÊåÔÚ×ó
+			else     //åä¹‹çˆ¶äº²åœ¨å³å”å”åœ¨å·¦
 			{
 				pNode uncle = gparent->pLeft_;
 				if (uncle && uncle->color_ == RED)
-					//ÊåÊå´æÔÚÇÒÎªºì¡ª¡ª¡ª¡ªĞŞ¸ÄÑÕÉ«£¬½«p, u¸ÄÎªºÚ£¬g¸ÄÎªºì£¬È»ºó°Ñgµ±³Écur£¬¼ÌĞøÏòÉÏµ÷Õû£¬Ö±µ½Óö¼ûºÚµÄ¡£
+					//å”å”å­˜åœ¨ä¸”ä¸ºçº¢â€”â€”â€”â€”ä¿®æ”¹é¢œè‰²ï¼Œå°†p, uæ”¹ä¸ºé»‘ï¼Œgæ”¹ä¸ºçº¢ï¼Œç„¶åæŠŠgå½“æˆcurï¼Œç»§ç»­å‘ä¸Šè°ƒæ•´ï¼Œç›´åˆ°é‡è§é»‘çš„ã€‚
 				{
 					parent->color_ = uncle->color_ = BLACK;
 					gparent->color_ = RED;
@@ -206,9 +209,9 @@ public:
 				}
 				else
 				{
-					//ÊåÊåÎª¿Õ»òÕßÊÇºÚÉ«£¬¶¼ĞèÒªĞı×ª
-				//pÎªÓÒcÎªÓÒ£¬×óĞı
-				//4£©pÎªÓÒcÎª×ó£¬ÓÒ×óĞı
+					//å”å”ä¸ºç©ºæˆ–è€…æ˜¯é»‘è‰²ï¼Œéƒ½éœ€è¦æ—‹è½¬
+				//pä¸ºå³cä¸ºå³ï¼Œå·¦æ—‹
+				//4ï¼‰pä¸ºå³cä¸ºå·¦ï¼Œå³å·¦æ—‹
 					if (parent->pLeft_ == cur)
 					{
 						RotateR(parent);
@@ -222,11 +225,11 @@ public:
 			}
 		}
 
-		header_->pParent_->color_ = BLACK;//²»¹ÜÊÇ²»ÊÇ¸ù£¬¸ù¶¼ÊÇºÚÉ«
+		header_->pParent_->color_ = BLACK;//ä¸ç®¡æ˜¯ä¸æ˜¯æ ¹ï¼Œæ ¹éƒ½æ˜¯é»‘è‰²
 		header_->pParent_->pParent_ = header_;
-		header_->pLeft_ = leftMost();//²åÈëÍê×ó±ß¸üĞÂ
-		header_->pRight_ = rightMost();//ÓÒ±ß¸üĞÂ
-		return true;
+		header_->pLeft_ = leftMost();//æ’å…¥å®Œå·¦è¾¹æ›´æ–°
+		header_->pRight_ = rightMost();//å³è¾¹æ›´æ–°
+		return make_pair<iterator(cur), true>;
 	}
 
 	pNode leftMost()
@@ -248,7 +251,7 @@ public:
 		}
 		return cur;
 	}
-	//ÓÒĞı£¬ÒÔË«Ç×½áµãÎªÖá
+	//å³æ—‹ï¼Œä»¥åŒäº²ç»“ç‚¹ä¸ºè½´
 	void RotateR(pNode parent)
 	{
 		pNode subL = parent->pLeft_;
@@ -282,8 +285,8 @@ public:
 
 		parent->pParent_ = subL;
 	}
-	//×óĞı£ºÓÒ±ßµÄÓÒ±ß¸ß	parent->bf = 2   cur->bf = 1
-	//ÒÔË«Ç×½áµãÎªÖá
+	//å·¦æ—‹ï¼šå³è¾¹çš„å³è¾¹é«˜	parent->bf = 2   cur->bf = 1
+	//ä»¥åŒäº²ç»“ç‚¹ä¸ºè½´
 	void RotateL(pNode parent)
 	{
 		pNode subR = parent->pRight_;
