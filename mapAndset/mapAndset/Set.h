@@ -16,7 +16,7 @@ class Set
 	typedef typename BRTree<KeyOfVal,  V>::iterator iterator;
 
 public:
-	bool Insert(const V& data)
+	pair<iterator,bool> Insert(const V& data)
 	{
 		return bt_.Insert(data);
 	}
